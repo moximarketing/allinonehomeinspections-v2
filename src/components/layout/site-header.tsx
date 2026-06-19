@@ -1,25 +1,27 @@
 "use client";
 
 /**
- * Header — rebuild of Elementor header template 10411 (spec/templates-library.json).
+ * Header — canonical Super-family nav PILL (floating-card width formula, min-[1440px] nav-switch,
+ * slide-in drawer), copied structurally from SI LV site-header.tsx, re-skinned for AIO: All In One
+ * wordmark logo, phone (301) 373-6430, "Contact Us" → /contact-us/, flat menu from content/nav.
  *
- * - Outer "Header Main Menu": absolute overlay, z-100, boxed 1300px, margin-top 50px desktop,
- *   px-50 desktop / p-25 tablet+mobile, transparent over hero.
- * - Inner "Border Radius" bar: bg #FFFFFF14, radius 20 (10 mobile), padding 25, glass over hero;
- *   row: logo (17%) / nav (center) / buttons (right, hidden tablet & mobile).
- * - Nav: Bricolage 15px w600, white, hover #FFFFFFB3, gap 15px — FLAT (no dropdowns on
- *   this site; the accordion submenu code is kept for parity with the cloned renderer).
- * - Buttons: phone (transparent, 1px white border) and "Contact Us" (red bg #75140C) —
- *   both white text 15px w500, hover: white bg + brand-dark text.
+ * AIO PER-SITE DEVIATIONS (intentional, NOT drift):
+ *  1. Logo = AIO All-In-One wordmark (/images/source/All-In-One-Logo.webp) — never a Super "S".
+ *  2. Nav glass = HIGHER white (bg-white/30 vs SI LV's bg-white/[0.078]). AIO's logo is DARK
+ *     (dark roofline + wordmark), so the canonical low-white glass (tuned for the bright Super "S")
+ *     doesn't give AIO's dark logo enough contrast. Same blur/structure/token formula, more white.
  */
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, Phone, X } from "lucide-react";
 import { mainNav } from "@/content/nav";
 import { cn } from "@/lib/utils";
+
+const PHONE_DISPLAY = "(301) 373-6430";
+const PHONE_TEL = "tel:13013736430";
+const LOGO = "/images/source/All-In-One-Logo.webp";
 
 function NavLink({
   href,
@@ -53,12 +55,8 @@ function NavLink({
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [mobileSubOpen, setMobileSubOpen] = useState<number | null>(null);
-  const router = useRouter();
-  const navRef = useRef<HTMLElement>(null);
 
-  // Close mobile menu on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileOpen(false);
@@ -68,186 +66,225 @@ export function SiteHeader() {
   }, []);
 
   return (
-    /* Header Main Menu: absolute overlay over the hero, z-100 */
-    <div className="absolute inset-x-0 top-0 z-[100] mt-0 lg:mt-[50px]">
-      {/* Outer container: boxed content 1300 + px-50 padding ⇒ wrapper max 1400 so the BAR is 1300 wide */}
-      <div className="mx-auto max-w-[1400px] px-[25px] lg:px-[50px] pt-[25px] lg:pt-0 pb-0">
-        {/* Border Radius bar — glass */}
-        <div
-          className="flex flex-row items-center justify-between flex-wrap lg:flex-nowrap gap-0 rounded-[10px] lg:rounded-[20px] p-[25px]"
-          style={{ backgroundColor: "#FFFFFF14", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
-        >
-          {/* Logo — 17% desktop */}
-          <div className="w-[72%] sm:w-auto lg:w-[17%] flex items-start shrink-0">
-            <Link href="/" aria-label="All In One Home Inspections — home">
-              {/* Live header logo (bugfree-site-logo → site logo). Live reuses the
-                  Texas filename with AIO artwork — file pending download (qa-report). */}
-              <Image
-                src="/images/source/cropped-Super-Inspector-Texas-Trademarked-04.png"
-                alt="All In One Home Inspections"
-                width={168}
-                height={50}
-                priority
-                className="h-auto w-[168px] max-h-[50px] object-contain object-left"
-              />
-            </Link>
-          </div>
+    <>
+      {/* Nav pill = floating card. AIO glass: bg-white/30 (higher white for dark-logo contrast). */}
+      <div
+        className="absolute inset-x-0 top-0 z-[100] px-[12px] py-[14px] md:px-[20px] md:py-[20px] lg:p-[25px] rounded-[var(--section-radius)] bg-white/30 backdrop-blur-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+        style={{
+          width: "min(var(--content-rail-max), 100% - 2 * (var(--section-margin-x) + var(--card-inset)))",
+          marginInline: "auto",
+          marginTop: "calc(var(--section-margin-x) + var(--card-inset))",
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <Link href="/" aria-label="All In One Home Inspections — home" className="flex items-center shrink-0">
+            <Image
+              src={LOGO}
+              alt="All In One Home Inspections logo"
+              width={300}
+              height={110}
+              priority
+              className="h-auto w-[140px] max-h-[52px] object-contain object-left"
+            />
+          </Link>
 
-          {/* Desktop nav — Bricolage 15px w600 white, gap 15px */}
-          <nav ref={navRef} aria-label="Main" className="hidden lg:block">
-            <ul className="flex items-center gap-[15px]">
-              {mainNav.map((item, i) => (
-                <li
-                  key={item.label}
-                  className="relative"
-                  onMouseEnter={() => setOpenIdx(i)}
-                  onMouseLeave={() => setOpenIdx((v) => (v === i ? null : v))}
-                >
-                  <NavLink
-                    href={item.href}
-                    external={item.external}
-                    className="inline-flex items-center gap-1 whitespace-nowrap text-[15px] font-semibold text-white transition-colors duration-200 hover:text-[#FFFFFFB3]"
-                  >
-                    {item.label}
-                    {item.children && <ChevronDown className="h-3.5 w-3.5" aria-hidden />}
-                  </NavLink>
-                  {item.children && openIdx === i && (
-                    /* Dropdown: white bg, 15px white border (rendered as padding), radius 10 */
-                    <ul className="absolute left-0 top-full z-50 min-w-[260px] rounded-[10px] bg-white p-[15px] shadow-[0_8px_30px_rgba(0,0,0,0.15)]">
-                      {item.children.map((c) => (
-                        <li key={c.label}>
-                          <NavLink
-                            href={c.href}
-                            external={c.external}
-                            className="block px-0 py-[5px] text-[15px] font-semibold leading-none text-black transition-colors duration-150 hover:text-brand-red"
-                          >
-                            {c.label}
-                          </NavLink>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Desktop buttons — hidden on tablet/mobile per spec */}
-          <div className="hidden lg:flex shrink-0 items-center justify-end gap-[10px]">
-            {/* Live template 10411: phone button + "Contact Us" → /contact-us/ */}
-            <a
-              href="tel:13013736430"
-              className="inline-flex w-[155px] items-center justify-center whitespace-nowrap rounded-[10px] border border-white bg-transparent py-[18px] text-[15px] font-medium leading-none text-white transition-colors duration-200 hover:bg-white hover:text-brand-purple"
-            >
-              (301) 373-6430
-            </a>
-            <Link
-              href="/contact-us/"
-              className="inline-flex w-[155px] items-center justify-center whitespace-nowrap rounded-[10px] border border-brand-red bg-brand-red py-[18px] text-[15px] font-medium leading-none text-white transition-colors duration-200 hover:border-white hover:bg-white hover:text-brand-purple"
-            >
-              Contact Us
-            </Link>
-          </div>
-
-          {/* Mobile toggle — white box, black icon (toggle_color black / bg white per spec) */}
-          <button
-            type="button"
-            aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMobileOpen((v) => !v)}
-            className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-black"
-          >
-            {mobileOpen ? <X className="h-6 w-6" aria-hidden /> : <Menu className="h-6 w-6" aria-hidden />}
-          </button>
-        </div>
-
-        {/* Mobile menu — sub-navigation is an ACCORDION: collapsed until the
-            parent row is tapped (Joel 2026-06-12) */}
-        {mobileOpen && (
-          <div className="lg:hidden mt-2 rounded-[10px] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.25)]">
-            <ul className="flex flex-col gap-2">
-              {mainNav.map((item, i) => (
-                <li key={item.label}>
-                  {item.children ? (
-                    <button
-                      type="button"
-                      aria-expanded={mobileSubOpen === i}
-                      onClick={() => {
-                        if (mobileSubOpen === i) {
-                          // second tap on the open parent → go to its page (Joel 2026-06-12)
-                          if (item.href && item.href !== "#") {
-                            setMobileOpen(false);
-                            router.push(item.href);
-                          } else {
-                            setMobileSubOpen(null);
-                          }
-                        } else {
-                          setMobileSubOpen(i);
-                        }
-                      }}
-                      className={`flex w-full items-center justify-between py-2 text-left text-[17px] font-semibold transition-colors duration-200 active:text-brand-red ${
-                        mobileSubOpen === i ? "text-brand-red" : "text-black"
-                      }`}
-                    >
-                      {item.label}
-                      <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-300 ${mobileSubOpen === i ? "rotate-180" : ""}`}
-                        aria-hidden
-                      />
-                    </button>
-                  ) : (
+          {/* Desktop nav — shown ≥1440 */}
+          <nav aria-label="Main" className="hidden min-[1440px]:flex flex-1 justify-center items-center gap-0">
+            {mainNav.map((item) => {
+              if (item.children) {
+                return (
+                  <div key={item.label} className="group relative">
                     <NavLink
                       href={item.href}
                       external={item.external}
-                      onClick={() => setMobileOpen(false)}
-                      className="block py-2 text-[17px] font-semibold text-black transition-colors duration-200 active:text-brand-red"
+                      className="flex items-center gap-1 font-display font-semibold text-[16px] leading-[16px] px-[8px] py-[14px] text-brand-primary hover:text-brand-red transition-colors duration-500 whitespace-nowrap"
                     >
                       {item.label}
+                      <ChevronDown
+                        className="w-3.5 h-3.5 opacity-70 transition-transform duration-200 group-hover:rotate-180"
+                        aria-hidden
+                      />
                     </NavLink>
-                  )}
-                  {item.children && (
-                    // smooth open/close (grid-rows trick — matches live's easing feel)
-                    <div
-                      className="grid transition-[grid-template-rows] duration-300 ease-out"
-                      style={{ gridTemplateRows: mobileSubOpen === i ? "1fr" : "0fr" }}
-                    >
-                      <ul className="ml-3 overflow-hidden border-l border-brand-divider pl-3">
-                        {item.children.map((c) => (
-                          <li key={c.label}>
+                    <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-200 z-[100]">
+                      <div className="w-64 rounded-2xl bg-white ring-1 ring-gray-100 p-2 shadow-[0_8px_30px_rgba(0,0,0,0.18)]">
+                        <div className="flex flex-col">
+                          {item.children.map((c) => (
                             <NavLink
+                              key={c.label}
                               href={c.href}
                               external={c.external}
-                              onClick={() => setMobileOpen(false)}
-                              className="block py-[4px] text-[15px] font-semibold text-brand-text transition-colors duration-150 hover:text-brand-red active:text-brand-red"
+                              className="block rounded-xl px-4 py-2.5 font-display font-medium text-[14px] text-black hover:bg-brand-red/10 hover:text-brand-red transition-colors duration-300"
                             >
                               {c.label}
                             </NavLink>
-                          </li>
-                        ))}
-                      </ul>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </li>
-              ))}
-              <li className="mt-2 flex gap-2">
-                <a
-                  href="tel:13013736430"
-                  className="flex-1 rounded-md border border-brand-primary px-4 py-3 text-center text-[14px] font-medium text-brand-primary"
+                  </div>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.label}
+                  href={item.href}
+                  external={item.external}
+                  className="inline-flex items-center gap-1 whitespace-nowrap font-display font-semibold text-[16px] leading-[16px] px-[8px] py-[14px] text-brand-primary transition-colors duration-500 ease-out hover:text-brand-red"
                 >
-                  (301) 373-6430
-                </a>
-                <Link
-                  href="/contact-us/"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex-1 rounded-md bg-brand-red px-4 py-3 text-center text-[14px] font-medium text-white"
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
+                  {item.label}
+                </NavLink>
+              );
+            })}
+          </nav>
+
+          {/* Desktop buttons — phone + Contact Us, shown ≥1440 */}
+          <div className="hidden min-[1440px]:flex items-center gap-3 shrink-0">
+            <a
+              href={PHONE_TEL}
+              className="inline-flex items-center rounded-md border border-brand-primary bg-transparent px-7 py-5 font-display font-semibold text-[16px] leading-[16px] text-brand-primary transition-colors duration-500 ease-out hover:bg-brand-purple hover:text-white hover:border-brand-purple cursor-pointer"
+            >
+              {PHONE_DISPLAY}
+            </a>
+            <Link
+              href="/contact-us/"
+              className="inline-flex items-center gap-2 rounded-md bg-brand-red border border-brand-red px-7 py-5 font-display font-semibold text-[16px] leading-[16px] text-white transition-colors duration-500 ease-out hover:bg-white hover:text-brand-purple hover:border-white cursor-pointer"
+            >
+              Contact Us
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
           </div>
-        )}
+
+          {/* Compact-pill CTAs (<1440): phone + hamburger only */}
+          <div className="min-[1440px]:hidden ml-auto flex items-center gap-2">
+            <a
+              href={PHONE_TEL}
+              aria-label="Call All In One Home Inspections"
+              className="bg-brand-red hover:bg-brand-red/90 rounded-md w-11 h-11 flex items-center justify-center text-white transition-all duration-500 cursor-pointer"
+            >
+              <Phone className="w-5 h-5" aria-hidden />
+            </a>
+            <button
+              type="button"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((v) => !v)}
+              className="bg-brand-red hover:bg-brand-red/90 rounded-md w-11 h-11 flex items-center justify-center text-white transition-all duration-500 cursor-pointer"
+            >
+              {mobileOpen ? <X className="w-5 h-5" aria-hidden /> : <Menu className="w-5 h-5" aria-hidden />}
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Mobile slide-in DRAWER + scrim — pure CSS transitions (iOS-safe). Hidden ≥1440. */}
+      <div
+        className={`fixed inset-0 z-[110] min-[1440px]:hidden ${mobileOpen ? "" : "pointer-events-none"}`}
+        aria-hidden={!mobileOpen}
+      >
+        <div
+          className={`absolute inset-0 bg-brand-black/50 transition-opacity ${mobileOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={() => setMobileOpen(false)}
+        />
+        <div
+          className={`absolute right-0 top-0 h-full w-[85%] max-w-sm bg-brand-white shadow-xl transition-transform duration-300 ease-out overflow-y-auto ${
+            mobileOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex items-center justify-between px-6 h-20 border-b border-brand-black/10">
+            <Image
+              src={LOGO}
+              alt="All In One Home Inspections logo"
+              width={300}
+              height={110}
+              className="h-auto w-[150px] max-h-[48px] object-contain object-left"
+            />
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-brand-black hover:bg-brand-red/10 cursor-pointer"
+            >
+              <X className="h-6 w-6" aria-hidden />
+            </button>
+          </div>
+
+          <nav className="px-6 py-4 flex flex-col" aria-label="Mobile">
+            {mainNav.map((item, i) => {
+              if (item.children) {
+                const expanded = mobileSubOpen === i;
+                return (
+                  <div key={item.label} className="border-b border-brand-black/5">
+                    <div className="flex items-stretch">
+                      <NavLink
+                        href={item.href}
+                        external={item.external}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex-1 py-3 text-base font-medium transition-colors duration-300 cursor-pointer text-brand-black/85 hover:text-brand-red"
+                      >
+                        {item.label}
+                      </NavLink>
+                      <button
+                        type="button"
+                        aria-expanded={expanded}
+                        aria-label={`Toggle ${item.label} submenu`}
+                        onClick={() => setMobileSubOpen(expanded ? null : i)}
+                        className="px-3 flex items-center text-brand-black/60 hover:text-brand-red transition-colors duration-300 cursor-pointer"
+                      >
+                        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} aria-hidden />
+                      </button>
+                    </div>
+                    {expanded && (
+                      <div className="pl-4 pb-3 flex flex-col">
+                        {item.children.map((c) => (
+                          <NavLink
+                            key={c.label}
+                            href={c.href}
+                            external={c.external}
+                            onClick={() => setMobileOpen(false)}
+                            className="py-2 text-sm font-medium text-brand-black/70 hover:text-brand-red transition-colors duration-300"
+                          >
+                            {c.label}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.label}
+                  href={item.href}
+                  external={item.external}
+                  onClick={() => setMobileOpen(false)}
+                  className="py-3 text-base font-medium border-b border-brand-black/5 transition-colors duration-300 cursor-pointer text-brand-black/85 hover:text-brand-red"
+                >
+                  {item.label}
+                </NavLink>
+              );
+            })}
+          </nav>
+
+          <div className="px-6 mt-4 flex flex-col gap-3">
+            <a
+              href={PHONE_TEL}
+              className="block w-full text-center border border-black bg-transparent rounded-md px-7 py-4 font-display font-semibold text-[16px] leading-[16px] text-black hover:border-brand-red hover:text-brand-red transition-colors duration-500 cursor-pointer"
+            >
+              {PHONE_DISPLAY}
+            </a>
+            <Link
+              href="/contact-us/"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-center gap-2 w-full bg-brand-red hover:bg-brand-red/90 rounded-md px-7 py-4 font-display font-semibold text-[16px] leading-[16px] text-white transition-all duration-500 cursor-pointer"
+            >
+              Contact Us
+              <ArrowRight className="w-5 h-5" aria-hidden />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

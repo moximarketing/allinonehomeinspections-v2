@@ -1,20 +1,21 @@
-import type { Metadata } from "next";
-import { getMeta, getPageBySlug } from "@/lib/elementor/data";
-import { collectFaqs } from "@/lib/elementor/faq";
-import { RenderElement } from "@/components/elementor/render";
-import { HeroFooter } from "@/components/sections/hero-footer";
-import { jsonLd, faqSchema } from "@/lib/schema";
-import { brand } from "../../brand.config";
-
 /**
- * Homepage — live Elementor page 13126 ("home") rendered through the generic
- * renderer, EXCEPT the "Hero Footer" section which is the native scheduler +
- * estimate calculator (real pricing math + two-step flow, see
- * src/components/sections/hero-footer.tsx).
+ * Homepage — native canonical composition (Phase B). Section order matches the live AIO page
+ * 13126 + SI LV canonical: Hero · Hero Footer (scheduler + estimate) · Services · Testimonials ·
+ * FAQs · What Sets Us Apart. Structure from SI LV; content/assets/colors are AIO.
  *
- * Live section order: Hero · Hero Footer · Our Services · Our Testimonials ·
- * Faqs · Core Feature. No breadcrumbs on the homepage (Moxi playbook B.12).
+ * FAQ schema + the visible accordion share content/home (homeFaqs) — single source (§6.7.5).
  */
+import type { Metadata } from "next";
+import { getMeta } from "@/lib/elementor/data";
+import { Hero } from "@/components/sections/hero";
+import { HeroFooter } from "@/components/sections/hero-footer";
+import { Services } from "@/components/sections/services";
+import { Testimonials } from "@/components/sections/testimonials";
+import { Faqs } from "@/components/sections/faqs";
+import { CoreFeatures } from "@/components/sections/core-features";
+import { jsonLd, faqSchema } from "@/lib/schema";
+import { homeFaqs } from "@/content/home";
+import { brand } from "../../brand.config";
 
 const m = getMeta("home");
 export const metadata: Metadata = {
@@ -33,29 +34,15 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  const page = getPageBySlug("home");
-  if (!page) return null;
-  const faqs = collectFaqs(page.elements);
-
   return (
     <>
-      {faqs.length > 0 && jsonLd(faqSchema(faqs))}
-      {page.elements.map((el) => {
-        if (el.settings._title === "Hero Footer") {
-          // homepage keeps the live -92px hero overlap on desktop AND mobile
-          // (inspector-torso overlap — Moxi playbook B.16)
-          return <HeroFooter key={el.id} overlap="-92px" mobileOverlap="-92px" />;
-        }
-        if (el.settings._title === "Faqs") {
-          // nav + footer link to /#faq (live menu) — give the FAQ section its anchor
-          return (
-            <div key={el.id} id="faq">
-              <RenderElement el={el} />
-            </div>
-          );
-        }
-        return <RenderElement key={el.id} el={el} />;
-      })}
+      {jsonLd(faqSchema(homeFaqs.map((f) => ({ q: f.q, a: f.a }))))}
+      <Hero />
+      <HeroFooter />
+      <Services />
+      <Testimonials />
+      <Faqs />
+      <CoreFeatures />
     </>
   );
 }

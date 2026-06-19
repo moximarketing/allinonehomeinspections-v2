@@ -39,3 +39,17 @@ export const coreFeatures = [
       "We do more than deliver a report. We help you understand the findings, answer your questions, and provide responsive support so you can move forward with greater confidence.",
   },
 ] as const;
+
+// Specialty / add-on inspection list — VERBATIM from the live build (old repo services.tsx
+// CHECKLIST). Rendered as the plain-text specialty row under the services grid (no dedicated
+// service subpages exist on this site — per-site, matches SI LV).
+export const specialties = [
+  "Pre-Listing / Seller Inspection",
+  "Commercial Property Inspection",
+  "Pool & Spa Inspection",
+  "Thermal Imaging Inspection",
+  "Drone Roof Inspection",
+  "Component Inspection",
+  "Virtual Walkthrough Inspection",
+  "And More",
+] as const;

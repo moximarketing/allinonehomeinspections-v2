@@ -31,6 +31,10 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { EkitIcon } from "@/components/ui/ekit-icons";
 import { Reveal } from "@/components/site/reveal";
+import { brand } from "../../../brand.config";
+
+// Pricing is sourced from brand.config (single source of truth) — Phase B wiring.
+const PRICING = brand.pricing;
 
 // Verbatim from the live form (field_5d8c07c) — first option is the placeholder.
 const INSPECTION_TYPES = [
@@ -40,15 +44,8 @@ const INSPECTION_TYPES = [
 ] as const;
 
 // Verbatim option list from the live form (field_b587733) — all 7 AIO add-ons.
-const ADD_ONS = [
-  "Sewer Camera Inspection: $250.00",
-  "Repair Cost Estimation: $100.00",
-  "Septic Inspection: $250.00",
-  "Pool Inspection: $150.00",
-  "Water Quality Test (Bacteria & Total Coliforms): $75.00",
-  "Water Quality Test (Bacteria, Total Coliforms, Lead & Nitrate): $225.00",
-  "Mold Inspection: $300.00",
-] as const;
+// Add-ons sourced from brand.pricing.addOns (price parsed from the label at runtime).
+const ADD_ONS = PRICING.addOns;
 
 // Verbatim from the live form (field_3e634c9) — first option is the placeholder.
 const HEAR_ABOUT_OPTIONS = [
@@ -75,17 +72,20 @@ const FIELD =
 
 function priceFor(opts: { sqft: number; yearBuilt: string; foundation: string; addOns: Set<number> }) {
   const { sqft, yearBuilt, foundation, addOns } = opts;
-  // Verbatim live math ($449 base, $0.16/sqft over 2000)
-  let price = sqft <= 2000 ? 449 : 449 + (sqft - 2000) * 0.16;
+  // Live math, sourced from brand.pricing ($449 base, $0.16/sqft over 2000)
+  let price =
+    sqft <= PRICING.sqftThreshold
+      ? PRICING.base
+      : PRICING.base + (sqft - PRICING.sqftThreshold) * PRICING.perSqftOver;
   let isOlder = false;
   if (yearBuilt.trim().length === 4) {
     const yb = parseInt(yearBuilt, 10);
     const currentYear = new Date().getFullYear();
-    isOlder = yb > 0 && currentYear - yb > 20;
+    isOlder = yb > 0 && currentYear - yb > PRICING.olderHomeYears;
   }
-  if (isOlder) price += 50;
+  if (isOlder) price += PRICING.olderHomeSurcharge;
   const isPier = foundation === "Pier and Beam";
-  if (isPier) price += 100;
+  if (isPier) price += PRICING.pierAndBeamSurcharge;
   for (const i of addOns) {
     const m = ADD_ONS[i].match(/\$(\d+(?:\.\d+)?)/);
     if (m) price += parseFloat(m[1]);
@@ -123,8 +123,8 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
     const cleaned = raw.replace(/,/g, "").replace(/\s*sqft/i, "").trim();
     const parsed = parseInt(cleaned, 10);
     if (!isNaN(parsed) && cleaned.length >= 3) {
-      const clamped = Math.min(Math.max(parsed, 500), 6000);
-      setSqft(Math.round(clamped / 50) * 50);
+      const clamped = Math.min(Math.max(parsed, PRICING.sliderMin), PRICING.sliderMax);
+      setSqft(Math.round(clamped / PRICING.sliderStep) * PRICING.sliderStep);
     }
   }, []);
 
@@ -173,7 +173,7 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
     setSubmitted(true);
   }
 
-  const sliderPct = ((sqft - 500) / (6000 - 500)) * 100;
+  const sliderPct = ((sqft - PRICING.sliderMin) / (PRICING.sliderMax - PRICING.sliderMin)) * 100;
 
   return (
     <section
@@ -429,9 +429,9 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                 <input
                   id="sqftRange"
                   type="range"
-                  min={500}
-                  max={6000}
-                  step={50}
+                  min={PRICING.sliderMin}
+                  max={PRICING.sliderMax}
+                  step={PRICING.sliderStep}
                   value={sqft}
                   aria-label="Home square footage"
                   onChange={(e) => onSlider(parseInt(e.target.value, 10))}
