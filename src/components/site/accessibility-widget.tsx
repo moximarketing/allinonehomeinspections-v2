@@ -9,25 +9,12 @@ import {
   Underline,
   PauseCircle,
   BookOpen,
+  PersonStanding,
 } from "lucide-react";
 
-// Universal-access person — round head + arms outstretched + legs apart. NOTE: lucide's
-// `Accessibility` icon renders as a WHEELCHAIR in this version, which violates the Moxi
-// standard, so we use this person-arms-outstretched figure instead. Never a wheelchair.
-function AccessibilityPerson({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden>
-      {/* round filled head */}
-      <circle cx="12" cy="4.3" r="2.1" fill="currentColor" />
-      {/* arms (down-angled) → body → legs (inverted V) */}
-      <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4.8 9.6 L12 8.7 L19.2 9.6" />
-        <path d="M12 8.7 V14.2" />
-        <path d="M7.5 20.6 L12 14.2 L16.5 20.6" />
-      </g>
-    </svg>
-  );
-}
+// Accessibility FAB icon = canonical lucide `PersonStanding` (the standing-person universal
+// figure — SUPER-FAMILY-LAYOUT-SPEC §6.8.5 hard standard). NEVER lucide `Accessibility` (it
+// renders as a WHEELCHAIR in this version), and never a wheelchair of any kind.
 
 type ToggleKey =
   | "a11y-larger-text"
@@ -118,7 +105,7 @@ export function AccessibilityWidget() {
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-brand-red hover:bg-brand-red/90 flex items-center justify-center text-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
       >
-        <AccessibilityPerson className="h-7 w-7" />
+        <PersonStanding className="h-7 w-7" aria-hidden />
       </button>
 
       <AnimatePresence>
