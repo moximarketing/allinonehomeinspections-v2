@@ -69,5 +69,33 @@ export const brand = {
   },
 
   // Team — populated on the live "Our Team" page; rendered verbatim by the renderer.
+  // NOTE: structured team content now lives in src/content/team.ts (FLAGGED unverified
+  // Texas clone — see that file before wiring a native team page in Phase B).
   team: [] as { name: string; role: string; phone: string; email: string }[],
+
+  // Home estimate calculator — VERBATIM live values (src/components/sections/hero-footer.tsx,
+  // sourced from spec/extracted/html-script-home-8cb13d0.txt). Mirrors SI LV's brand.pricing
+  // shape so the canonical hero-footer can read from here. AIO has NO location field (live
+  // Houston/DFW branches are dead) and ADDS a 7-item add-on list (price parsed from the label).
+  pricing: {
+    base: 449,
+    sqftThreshold: 2000,
+    perSqftOver: 0.16,
+    olderHomeSurcharge: 50,
+    olderHomeYears: 20,
+    pierAndBeamSurcharge: 100,
+    sliderMin: 500,
+    sliderMax: 6000,
+    sliderStep: 50,
+    sliderDefault: 2000,
+    addOns: [
+      "Sewer Camera Inspection: $250.00",
+      "Repair Cost Estimation: $100.00",
+      "Septic Inspection: $250.00",
+      "Pool Inspection: $150.00",
+      "Water Quality Test (Bacteria & Total Coliforms): $75.00",
+      "Water Quality Test (Bacteria, Total Coliforms, Lead & Nitrate): $225.00",
+      "Mold Inspection: $300.00",
+    ],
+  },
 } as const;

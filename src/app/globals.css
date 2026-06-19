@@ -18,16 +18,75 @@
   --color-brand-bg:           #FAFAFA;   /* Background Color */
   --color-brand-red:          #75140C;   /* brand "red" slot (3fe6c1e) */
   --color-brand-purple:       #24333C;   /* brand "purple" slot (3adc356) */
-  --color-brand-lava:         #98AAB7;   /* "lava" slot (7c8c130) */
+  --color-brand-lava:         #98AAB7;   /* "lava" slot (7c8c130) — Elementor renderer references this name */
+  --color-brand-lavender:     #98AAB7;   /* canonical alias of the lava slot — Super-family components reference brand-lavender (icon-hover pair) */
   --color-brand-lt-gr:        #888888;   /* "LT GR" (77d187d) */
   --color-brand-link:         #C7C7C7;   /* "Link" (fb4b2d3) */
 
   /* Field fill used by the live calculator forms (#EBEBEB from form widget settings) */
   --color-field-fill: #EBEBEB;
 
+  /* ─────────────────────────────────────────────────────────────────────────
+     LAYOUT-TOKEN ENGINE (HVAC / Super-family mechanism — Phase 0 foundation)
+     Ported verbatim from SI LV (super-inspector-las-vegas). COLOR-AGNOSTIC —
+     does not touch AIO's brand colors. INERT until a canonical component
+     consumes it: nothing references these yet, so this block changes ZERO
+     current pixels. Phase B sections dial these in surface by surface.
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* Card-on-canvas layout system */
+  --section-margin-x: 0.5rem;   /* mobile horizontal margin between viewport and card */
+  --section-margin-y: 0.75rem;  /* vertical gap between cards */
+  --section-radius:   1.25rem;  /* card corner radius */
+
+  /* Floating-card inset (Super-family standard) — the MINIMUM gap a floating card
+     (nav pill inside the hero band; estimate card inside the content rail) keeps from
+     its container's inner edge. Separate from --section-margin-x (band↔viewport) and
+     --content-gutter (rail↔viewport): this is card↔(band|rail) inner edge. */
+  --card-inset: 1.25rem;     /* 20px mobile (<768); 40px (2.5rem) at md+ — stepped in @layer base */
+
+  /* Content rail — capped, centered, never-collapse gutter (Super-family standard).
+     Responsive --content-gutter / --card-pad are stepped up in @layer base below. */
+  --content-rail-max: 1300px;   /* content cap (hero copy + estimate form) */
+  --content-gutter:   1rem;     /* 16px floor (<768) → 24px (≥768) */
+  --card-pad:         1.5rem;   /* in-card padding: 24px (<768) → 32px (≥768) → 40px (≥1024) */
+
+  /* Nav-clearance standard (Super-family) — guarantees ≥ --nav-clearance of vertical
+     space between the nav pill's BOTTOM edge and the first content item below it. The
+     pill sits --card-inset below the band top and is --pill-height tall, so the first
+     item's top padding = card-inset + pill-height + nav-clearance. --pill-height steps
+     up per breakpoint in @layer base below. Consumed by the hero via --hero-pad-top. */
+  --nav-clearance: 80px;        /* MIN gap: pill bottom → first content item */
+  --pill-height:   76px;        /* rendered nav-pill height; 92px (≥768), 112px (≥1024) */
+  --hero-pad-top:  calc(var(--card-inset) + var(--pill-height) + var(--nav-clearance));
+
+  /* Hero ↔ estimate-card overlap (Super-family standard). The estimate card is pulled
+     UP into the bottom of the hero band by --card-overlap (negative margin-top), with
+     --hero-trust-gap of clear space between the hero's last item and the card top.
+     hero bottom padding = overlap + gap. */
+  --card-overlap:    80px;   /* card overlaps up into the hero bg by this */
+  --hero-trust-gap:  40px;   /* clear gap: trust-icon row bottom → card top */
+  --hero-pad-bottom: calc(var(--card-overlap) + var(--hero-trust-gap));  /* = 120px */
+
+  /* Hero H1 line-control standard (Super-family) — max-width on the hero H1 so it wraps
+     to balanced lines (with text-wrap: balance). em-relative so the measure scales with
+     font-size. The em VALUE is per-site tuning (Phase B dials it to AIO's H1 copy). */
+  --hero-h1-measure: 11em;
+
   /* ── Typography — Bricolage Grotesque everywhere (kit system typography) ── */
   --font-display: var(--font-bricolage);
   --font-body:    var(--font-bricolage);
+}
+
+/* Canonical content rail — the ONE left/right boundary shared by the PageHero H1 and
+   supporting-page section content, so they align flush by construction. PILL-ALIGNED:
+   insets by --section-margin-x + --card-inset (the same inset the nav pill + PageHero copy
+   use), capped at --content-rail-max, centered. NOTE: uses 100%, so it MUST sit inside a
+   FULL-BLEED parent — a breakout that cancels the Section's --section-margin-x
+   (mx-[calc(-1*var(--section-margin-x))]). See SUPER-FAMILY-LAYOUT-SPEC §3.1/§6. */
+.content-rail {
+  width: min(var(--content-rail-max), 100% - 2 * (var(--section-margin-x) + var(--card-inset)));
+  margin-inline: auto;
 }
 
 html { scroll-behavior: smooth; }
@@ -99,6 +158,14 @@ html.a11y-readable-font * {
     /* Live kit body background is "Background Color" #FAFAFA (verified computed on live).
        White-card sections carry their own bg; the body shows through elsewhere. */
     background-color: var(--color-brand-bg);
+  }
+  /* Responsive stepping for the layout-token engine (HVAC mechanism). Steps the
+     card/rail/pill scale up at md/lg. Inert until consumed (Phase 0). */
+  @media (min-width: 768px) {
+    :root { --section-margin-x: 1rem; --content-gutter: 1.5rem; --card-pad: 2rem; --pill-height: 92px; --card-inset: 2.5rem; }
+  }
+  @media (min-width: 1024px) {
+    :root { --section-margin-x: 1.5rem; --card-pad: 2.5rem; --pill-height: 112px; }
   }
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 }

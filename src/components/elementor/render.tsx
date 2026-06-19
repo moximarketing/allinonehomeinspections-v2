@@ -573,22 +573,31 @@ function EkitIconBox({ el }: { el: ElementorElement }) {
         <TitleTag
           className="si-ib-title"
           style={{ display: "block", color: titleColor, margin: 0, marginBottom: 2 }}
-        >
-          {title}
-        </TitleTag>
+          dangerouslySetInnerHTML={{ __html: rewriteHtml(String(title ?? "")) }}
+        />
         {desc && (
-          <span className="si-ib-desc" style={{ display: "block", color: descColor }}>
-            {desc}
-          </span>
+          <span
+            className="si-ib-desc"
+            style={{ display: "block", color: descColor }}
+            dangerouslySetInnerHTML={{ __html: rewriteHtml(String(desc)) }}
+          />
         )}
       </span>
     </div>
   ) : (
     <div className={`el-${el.id}${hideClasses(s)}`}>
       {iconNode}
-      <TitleTag className="si-ib-title" style={{ marginTop: 30, color: titleColor }}>{title}</TitleTag>
+      <TitleTag
+        className="si-ib-title"
+        style={{ marginTop: 30, color: titleColor }}
+        dangerouslySetInnerHTML={{ __html: rewriteHtml(String(title ?? "")) }}
+      />
       {desc && (
-        <p className="si-ib-desc" style={{ marginTop: 10, color: descColor }}>{desc}</p>
+        <p
+          className="si-ib-desc"
+          style={{ marginTop: 10, color: descColor }}
+          dangerouslySetInnerHTML={{ __html: rewriteHtml(String(desc)) }}
+        />
       )}
       {btnText && btnUrl && (
         <div style={{ marginTop: "auto", paddingTop: 20 }}>
@@ -872,14 +881,18 @@ function NativeIconBox({ el }: { el: ElementorElement }) {
           }}
         >
           {iconNode}
-          <TitleTag className="si-nib-title" style={{ margin: 0, color: color(s, "title_color") || "#24333C", fontWeight: 600 }}>
-            {s.title_text}
-          </TitleTag>
+          <TitleTag
+            className="si-nib-title"
+            style={{ margin: 0, color: color(s, "title_color") || "#24333C", fontWeight: 600 }}
+            dangerouslySetInnerHTML={{ __html: rewriteHtml(String(s.title_text ?? "")) }}
+          />
         </div>
         {s.description_text && (
-          <p className="si-nib-desc" style={{ marginTop: 10, color: color(s, "description_color") || "#484C44" }}>
-            {s.description_text}
-          </p>
+          <p
+            className="si-nib-desc"
+            style={{ marginTop: 10, color: color(s, "description_color") || "#484C44" }}
+            dangerouslySetInnerHTML={{ __html: rewriteHtml(String(s.description_text)) }}
+          />
         )}
       </div>
     </>
