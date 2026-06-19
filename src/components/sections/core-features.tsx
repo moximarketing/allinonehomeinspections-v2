@@ -26,7 +26,7 @@ export function CoreFeatures() {
         aria-hidden
         className="absolute inset-0 z-0 bg-scroll md:bg-fixed motion-reduce:bg-scroll"
         style={{
-          backgroundImage: "url(/images/source/home-inspections-dmv.webp)",
+          backgroundImage: "url(/images/hero-house.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

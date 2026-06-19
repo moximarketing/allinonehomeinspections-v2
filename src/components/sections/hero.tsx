@@ -20,9 +20,10 @@ import Image from "next/image";
 import { ClipboardCheck, Star, MapPin } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
 
-const HERO_BG = "/images/source/man-holding-camera-while-standing-against-built-structure-scaled.jpg"; // AIO inspection scene
-const TECH_IMG = "/images/source/new-backgroundless-image-6.png"; // AIO technician cutout (backgroundless)
-const BADGE_ASSET = "/images/source/AIO-Favicon-scaled.png"; // AIO logomark for the badge center
+// Image slots match the LIVE site (old allinonehomeinspections repo) exactly.
+const HERO_BG = "/images/hero-bg.webp"; // live hero background
+const TECH_IMG = "/images/hero-inspector.webp"; // live AIO technician cutout (NOT a Super person)
+const BADGE_ASSET = "/images/favicon-300.webp"; // AIO square logomark for the badge center
 
 export function Hero() {
   return (

@@ -18,11 +18,22 @@ import { brand } from "../../../brand.config";
 
 export const dynamicParams = false;
 
+// Slugs migrated to native app-router folders (Phase B) — excluded here so they don't
+// double-resolve through the Elementor catch-all. These still have data in the extract;
+// the native page is the source of truth. The remaining slugs (our-company, careers,
+// legal, agent-scheduler, inspectors-mission-super-team) still render via the renderer.
+const NATIVE_SLUGS = new Set([
+  "contact-us",
+  "reviews",
+  "inspectors-mission-super-team-the-team",
+]);
+
 export function generateStaticParams() {
-  // 10 pages ("home" is served at /) + the 6 migrated blog posts (root-level slugs)
+  // pages ("home" is served at /) + the 6 migrated blog posts (root-level slugs),
+  // minus the slugs now served by native folders.
   const pageSlugs = new Set(allSlugs());
   return [
-    ...allSlugs().map((slug) => ({ slug })),
+    ...allSlugs().filter((slug) => !NATIVE_SLUGS.has(slug)).map((slug) => ({ slug })),
     ...POSTS.filter((p) => !pageSlugs.has(p.slug)).map((p) => ({ slug: p.slug })),
   ];
 }

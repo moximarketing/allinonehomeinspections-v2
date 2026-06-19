@@ -17,7 +17,7 @@ import { Section } from "@/components/layout/section";
 import { Reveal } from "@/components/site/reveal";
 import { SiteMap } from "@/components/site/site-map";
 
-const LOGO = "/images/source/All-In-One-Logo.webp";
+const LOGO = "/images/logo.webp"; // live AIO wordmark
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },

@@ -74,7 +74,7 @@ export function Testimonials() {
         aria-hidden
         className="absolute inset-0 z-0 bg-cover bg-no-repeat lg:bg-fixed motion-reduce:lg:bg-scroll"
         style={{
-          backgroundImage: "url(/images/source/new-enhance-photo-base-1-25-scaled.jpg)",
+          backgroundImage: "url(/images/source/home-inspections-dmv.webp)",
           backgroundPosition: "center right",
         }}
       />

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 const PHONE_DISPLAY = "(301) 373-6430";
 const PHONE_TEL = "tel:13013736430";
-const LOGO = "/images/source/All-In-One-Logo.webp";
+const LOGO = "/images/logo.webp"; // live AIO wordmark (old repo header asset)
 
 function NavLink({
   href,

@@ -42,7 +42,7 @@ export function Faqs() {
         <Reveal as="div" delay={0.2} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
           <div className="relative h-full min-h-[500px] rounded-2xl overflow-hidden">
             <Image
-              src="/images/source/new-enhance-photo-base-1-26.jpg"
+              src="/images/faq.webp"
               alt="An All In One home inspector at work in the DMV"
               fill
               sizes="(min-width: 1024px) 40vw, 100vw"

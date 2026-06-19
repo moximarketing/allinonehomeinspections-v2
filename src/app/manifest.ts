@@ -11,8 +11,10 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "browser",
     background_color: "#FAFAFA",
     theme_color: "#24333C",
-    // FLAG (qa-report.md): icon set pending — Texas-branded icons deleted;
-    // add AIO icon.png (512x512) + apple-touch-icon.png before launch.
-    icons: [],
+    // AIO icons from the live repo: file-based favicon.ico / icon.png (512²) / apple-icon.png
+    // are auto-served by Next's metadata convention; the 512² icon is referenced here for PWA.
+    icons: [
+      { src: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
   };
 }
