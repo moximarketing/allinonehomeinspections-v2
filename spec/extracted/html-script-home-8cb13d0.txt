@@ -1,0 +1,229 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var slider = document.getElementById("sqftRange");
+  var display = document.getElementById("sqftDisplay");
+  var priceEl = document.querySelector('[data-id="60f242a"] .elementor-heading-title');
+  var locationEl = document.getElementById("form-field-location");
+  var locationSync = document.getElementById("form-field-locationscheduling");
+  var sqftSync = document.getElementById("form-field-sqftscheduling");
+  var totalCost = document.getElementById("form-field-total_cost");
+  var yearEl = document.getElementById("form-field-field_36374fb");
+  var foundationEl = document.getElementById("form-field-field_d3b4dd2");
+  var olderLabel = document.querySelector('.elementor-field-group-field_696b830');
+  var pierLabel  = document.querySelector('.elementor-field-group-field_4584281');
+  var middleTotal = document.querySelector('.elementor-field-group-field_9c7e534');
+  var bottomTotal = document.querySelector('.elementor-field-group-field_ab1ab36');
+
+  // DFW-only checkboxes
+  var hvacCb  = document.getElementById("form-field-field_b587733-1");
+  var pestCb  = document.getElementById("form-field-field_b587733-2");
+
+  // Inspection type dropdown
+  var inspectionEl = document.getElementById("form-field-field_5d8c07c");
+
+  var sqftSyncUpdating = false;
+
+  // ── Sqft placeholder state ──
+  // Track whether the sqft field on the scheduling form has been "activated"
+  var sqftActivated = false;
+
+  if (middleTotal) middleTotal.style.setProperty('display', 'none', 'important');
+
+  // ── Placeholder styling for dropdowns ──
+  // Inject a small style block for placeholder-state selects and sqft placeholder
+  var styleTag = document.createElement('style');
+  styleTag.textContent =
+	'.si-select-placeholder { color: #9a9a9a !important; }' +
+	'.si-sqft-placeholder { color: #9a9a9a !important; }';
+  document.head.appendChild(styleTag);
+
+  // ── Make dropdown placeholder options act as true placeholders ──
+  // Set value="" so native required validation blocks submission
+  function setupSelectPlaceholder(selectEl, placeholderText) {
+	if (!selectEl) return;
+	var firstOpt = selectEl.querySelector('option');
+	if (firstOpt && firstOpt.value === placeholderText) {
+	  firstOpt.value = '';            // empty value = fails required validation
+	  firstOpt.disabled = true;       // can't re-select after choosing a real option
+	  firstOpt.hidden = false;        // still visible as the "label"
+	}
+	// Start in placeholder style
+	selectEl.classList.add('si-select-placeholder');
+	selectEl.addEventListener('change', function () {
+	  if (selectEl.value === '') {
+		selectEl.classList.add('si-select-placeholder');
+	  } else {
+		selectEl.classList.remove('si-select-placeholder');
+	  }
+	});
+  }
+
+  setupSelectPlaceholder(locationSync, 'Nearest Location');
+  setupSelectPlaceholder(inspectionEl, 'Inspection Type');
+
+  // ── Sqft field: show native placeholder until activated ──
+  if (sqftSync) {
+	sqftSync.value = '';  // clear any pre-filled value so placeholder shows
+	sqftSync.classList.add('si-sqft-placeholder');
+
+	// Activate on direct user interaction with the sqft field
+	sqftSync.addEventListener('focus', function () {
+	  if (!sqftActivated) {
+		sqftActivated = true;
+		sqftSync.classList.remove('si-sqft-placeholder');
+	  }
+	});
+  }
+
+  function activateSqftFromSlider() {
+	if (!sqftActivated) {
+	  sqftActivated = true;
+	  if (sqftSync) sqftSync.classList.remove('si-sqft-placeholder');
+	}
+  }
+
+  function updateDfwOptions() {
+	var isDfw = locationEl && locationEl.value === "Dallas / Fort Worth";
+
+	[hvacCb, pestCb].forEach(function (cb) {
+	  if (!cb) return;
+	  var wrap = cb.closest('.elementor-field-option');
+	  if (!wrap) return;
+	  if (isDfw) {
+		wrap.style.setProperty('display', '', 'important');
+	  } else {
+		wrap.style.setProperty('display', 'none', 'important');
+		cb.checked = false;
+	  }
+	});
+  }
+
+  function getCheckboxTotal() {
+	var total = 0;
+	document.querySelectorAll('input[name="form_fields[field_b587733][]"]:checked').forEach(function (cb) {
+	  var match = cb.value.match(new RegExp('\\$(\\d+(?:\\.\\d+)?)'));
+	  if (match) total += parseFloat(match[1]);
+	});
+	return total;
+  }
+
+  function update() {
+	if (!slider || !priceEl) return;
+	var sqft = parseInt(slider.value);
+	display.textContent = sqft.toLocaleString();
+	var price = sqft <= 2000 ? 449 : 449 + (sqft - 2000) * 0.16;
+	if (locationEl && locationEl.value === "Houston") price -= 50;
+	var yearVal = yearEl ? yearEl.value.trim() : '';
+	var isOlder = false;
+	if (yearVal.length === 4) {
+	  var yearBuilt = parseInt(yearVal);
+	  var currentYear = new Date().getFullYear();
+	  isOlder = yearBuilt > 0 && (currentYear - yearBuilt) > 20;
+	}
+	if (isOlder) price += 50;
+	var isPierAndBeam = foundationEl && foundationEl.value === "Pier and Beam";
+	if (isPierAndBeam) price += 100;
+	price += getCheckboxTotal();
+	if (olderLabel) {
+	  if (yearVal.length === 4 && isOlder) {
+		olderLabel.style.setProperty('display', '', 'important');
+	  } else {
+		olderLabel.style.setProperty('display', 'none', 'important');
+	  }
+	}
+	if (pierLabel) {
+	  if (isPierAndBeam) {
+		pierLabel.style.setProperty('display', '', 'important');
+	  } else {
+		pierLabel.style.setProperty('display', 'none', 'important');
+	  }
+	}
+	var formatted = "$" + Math.round(price).toLocaleString();
+	priceEl.textContent = formatted;
+	if (totalCost) totalCost.value = formatted;
+	if (bottomTotal) bottomTotal.innerHTML = '<b>Total: ' + formatted + '</b>';
+	var pct = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+	slider.style.background =
+	  "linear-gradient(to right, #75140C 0%, #75140C " + pct + "%, #EBEBEB " + pct + "%, #EBEBEB 100%)";
+
+	// ── Location sync ──
+	// Only sync to the scheduling dropdown if the user picked a real location
+	// on the left form (not the default "Choose The Nearest Location")
+	if (locationSync && locationEl) {
+	  var leftVal = locationEl.value;
+	  if (leftVal && leftVal !== "Choose The Nearest Location") {
+		locationSync.value = leftVal;
+		locationSync.classList.remove('si-select-placeholder');
+		// Re-enable the placeholder option briefly so .value can be set,
+		// but it stays disabled for manual re-selection
+	  } else {
+		// Left form is on default — don't override the scheduling dropdown
+		// (leave it as whatever the user picked, or the placeholder)
+	  }
+	}
+
+	// ── Sqft sync ──
+	// Only write to the sqft scheduling field if activated
+	if (!sqftSyncUpdating && sqftSync && sqftActivated) {
+	  sqftSync.value = sqft.toLocaleString() + ' sqft';
+	}
+
+	updateDfwOptions();
+  }
+
+  if (slider) {
+	slider.addEventListener("input", function () {
+	  activateSqftFromSlider();
+	  update();
+	});
+  }
+  if (locationEl) locationEl.addEventListener("change", update);
+  if (yearEl) yearEl.addEventListener("input", update);
+  if (foundationEl) foundationEl.addEventListener("change", update);
+  document.querySelectorAll('input[name="form_fields[field_b587733][]"]').forEach(function (cb) {
+	cb.addEventListener("change", update);
+  });
+
+  // ── Scheduling form location dropdown → sync back to left form ──
+  if (locationSync) {
+	locationSync.addEventListener("change", function () {
+	  if (locationEl && locationSync.value) {
+		locationEl.value = locationSync.value;
+	  }
+	  update();
+	});
+  }
+
+  // ── Scheduling form sqft field → sync back to slider ──
+  if (sqftSync) {
+	sqftSync.addEventListener("input", function () {
+	  sqftSyncUpdating = true;
+	  if (!sqftActivated) {
+		sqftActivated = true;
+		sqftSync.classList.remove('si-sqft-placeholder');
+	  }
+	  var raw = sqftSync.value.replace(/,/g, '').replace(/\s*sqft/i, '').trim();
+	  var parsed = parseInt(raw);
+	  if (!isNaN(parsed) && raw.length >= 3) {
+		var min = parseInt(slider.min);
+		var max = parseInt(slider.max);
+		parsed = Math.min(Math.max(parsed, min), max);
+		var step = parseInt(slider.step) || 50;
+		parsed = Math.round(parsed / step) * step;
+		slider.value = parsed;
+		update();
+	  }
+	  sqftSyncUpdating = false;
+	});
+
+	sqftSync.addEventListener("blur", function () {
+	  sqftSyncUpdating = false;
+	  update();
+	});
+  }
+
+  // Run initial update (pricing calc, DFW options, etc.)
+  // but sqft won't sync to scheduling form since sqftActivated is false
+  update();
+});
+</script>   

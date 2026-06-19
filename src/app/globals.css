@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/*
+ * All In One Home Inspections — design tokens extracted byte-exact from the live
+ * Elementor kit (9555) at allinonehomeinspections.com (2026-06-12).
+ * Do not eyeball-edit values here; the spec is the source of truth.
+ */
+@theme {
+  /* ── Global Colors (Elementor kit 9555, live AIO values) ── */
+  --color-brand-primary:      #24333C; /* Primary — headings */
+  --color-brand-secondary:    #FFFFFF; /* Secondary */
+  --color-brand-text:         #484C44; /* Text — body copy */
+  --color-brand-accent:       #FFFFFF; /* Accent */
+  --color-brand-white:        #FFFFFF;
+  --color-brand-black:        #000000;
+  --color-brand-divider:      #0000001A; /* Divider Color */
+  --color-brand-divider-dark: #FFFFFF1A; /* Dark Divider Color */
+  --color-brand-bg:           #FAFAFA;   /* Background Color */
+  --color-brand-red:          #75140C;   /* brand "red" slot (3fe6c1e) */
+  --color-brand-purple:       #24333C;   /* brand "purple" slot (3adc356) */
+  --color-brand-lava:         #98AAB7;   /* "lava" slot (7c8c130) */
+  --color-brand-lt-gr:        #888888;   /* "LT GR" (77d187d) */
+  --color-brand-link:         #C7C7C7;   /* "Link" (fb4b2d3) */
+
+  /* Field fill used by the live calculator forms (#EBEBEB from form widget settings) */
+  --color-field-fill: #EBEBEB;
+
+  /* ── Typography — Bricolage Grotesque everywhere (kit system typography) ── */
+  --font-display: var(--font-bricolage);
+  --font-body:    var(--font-bricolage);
+}
+
+html { scroll-behavior: smooth; }
+#schedule { scroll-margin-top: 130px; }
+#faq { scroll-margin-top: 130px; }
+
+/* Global keyboard-focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-brand-purple);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Scroll-reveal — CSS-class based (no JS animation loop to freeze on iOS Safari).
+   Hidden state only when JS is running (html.js set pre-paint in layout.tsx),
+   so crawlers/no-JS always see content. */
+html.js .si-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.5s ease-out var(--si-delay, 0s),
+    transform 0.5s ease-out var(--si-delay, 0s);
+}
+html.js .si-reveal.si-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .si-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Honor OS-level reduced motion (Reveal/MotionConfig handles motion lib; CSS killed here) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility widget toggles */
+html.a11y-larger-text { font-size: 120%; }
+html.a11y-high-contrast { filter: contrast(1.2) saturate(1.4); }
+html.a11y-underline-links a { text-decoration: underline !important; }
+html.a11y-no-animations *,
+html.a11y-no-animations *::before,
+html.a11y-no-animations *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html.a11y-readable-font,
+html.a11y-readable-font * {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    /* Kit "Text" system typography: Bricolage Grotesque w400 16px lh1.6em, color #484C44 */
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-brand-text);
+    /* Live kit body background is "Background Color" #FAFAFA (verified computed on live).
+       White-card sections carry their own bg; the body shows through elsewhere. */
+    background-color: var(--color-brand-bg);
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
+}
+
+/* ── Live sqft slider (verbatim CSS from the live form HTML field) ── */
+/* Width controlled by Tailwind classes on the wrapper (must match the select rail). */
+.si-slider-wrap {
+  margin: 0 auto;
+  text-align: center;
+}
+#sqftRange {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #EBEBEB;
+  border-radius: 999px;
+  outline: none;
+  border: none;
+}
+#sqftRange::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+  border-radius: 999px;
+}
+#sqftRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #75140C;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  margin-top: -6px;
+}
+#sqftRange::-moz-range-track {
+  height: 6px;
+  background: #EBEBEB;
+  border-radius: 999px;
+  border: none;
+}
+#sqftRange::-moz-range-progress {
+  height: 6px;
+  background: #75140C;
+  border-radius: 999px;
+}
+#sqftRange::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #75140C;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+#sqftRange:focus { outline: none; box-shadow: none; }
+.si-slider-readout { margin-top: 10px; font-size: 17px; color: #222; }
+
+/* Rotating circular text badge in the hero (live: text-path widget) */
+@keyframes si-spin { to { transform: rotate(360deg); } }
+.experience-spin {
+  animation: si-spin 30s linear infinite;
+  transform-origin: 50% 50%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience-spin { animation: none; }
+}
+
+/* Renderer hide flags (Elementor responsive visibility) */
+@media (min-width: 1025px) { .si-hide-desktop { display: none !important; } }
+@media (min-width: 768px) and (max-width: 1024px) { .si-hide-tablet { display: none !important; } }
+@media (max-width: 767px) { .si-hide-mobile { display: none !important; } }
+
+/* Select placeholder state (live calculator behavior) */
+.si-select-placeholder { color: #9a9a9a !important; }
+.si-sqft-placeholder { color: #9a9a9a !important; }
+
+/* Blog post body — migrated live content rendered verbatim */
+.si-prose { font-size: 16px; line-height: 1.7; color: var(--color-brand-text); }
+.si-prose h2 { font-size: 28px; font-weight: 600; line-height: 1.2; color: var(--color-brand-primary); margin: 1.6em 0 0.6em; }
+.si-prose h3 { font-size: 22px; font-weight: 600; line-height: 1.25; color: var(--color-brand-primary); margin: 1.4em 0 0.5em; }
+.si-prose h4 { font-size: 18px; font-weight: 600; color: var(--color-brand-primary); margin: 1.2em 0 0.4em; }
+.si-prose p { margin: 0 0 1em; }
+.si-prose ul { list-style: disc; padding-left: 1.4em; margin: 0 0 1em; }
+.si-prose ol { list-style: decimal; padding-left: 1.4em; margin: 0 0 1em; }
+.si-prose li { margin: 0.35em 0; }
+.si-prose a { color: var(--color-brand-purple); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.si-prose a:hover { color: var(--color-brand-lava); }
+.si-prose img { border-radius: 20px; height: auto; max-width: 100%; margin: 1.5em 0; }
+.si-prose figure { margin: 1.5em 0; }
+.si-prose figcaption { font-size: 14px; color: var(--color-brand-lt-gr); margin-top: 0.5em; }
+.si-prose blockquote { border-left: 4px solid var(--color-brand-purple); padding-left: 1em; margin: 1.5em 0; font-style: italic; }
+.si-prose strong, .si-prose b { font-weight: 700; }
+.si-prose table { width: 100%; border-collapse: collapse; margin: 1.5em 0; }
+.si-prose th, .si-prose td { border: 1px solid #ddd; padding: 10px 14px; text-align: left; }
+.si-prose th { background: #f5f5f5; }

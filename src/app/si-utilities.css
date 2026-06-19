@@ -1,0 +1,30 @@
+/* Renderer support utilities (media-query scoped — mobile-only fixes must not
+   touch desktop styling, Moxi playbook C.25). Inherited from the Texas build;
+   the sr-* Star Reviews styles were stripped (no Star Reviews funnel on AIO). */
+
+/* Raw html widgets (ISN scheduler iframes, cookie-policy tables) */
+.si-rawhtml iframe { max-width: 100%; }
+/* ISN online scheduler: the embed ships with an inline 800px height that cuts off
+   the form's Next button — give it room (Moxi playbook B.20) */
+.si-rawhtml iframe[src*="inspectionsupport"] { height: 1250px !important; }
+
+/* MOBILE ONLY: generic form fields stack one per line (Moxi playbook B.15) */
+@media (max-width: 767px) {
+  .si-stub-field { flex-basis: 100% !important; }
+}
+
+/* MOBILE ONLY: maps tall enough for the place card (name + reviews) */
+@media (max-width: 767px) {
+  .si-map-mobile { height: 400px !important; }
+}
+
+/* MOBILE ONLY: scheduler/estimate overlap is per-page — supporting pages zero it;
+   the homepage keeps overlapping the inspector cut-out (Moxi playbook B.16) */
+@media (max-width: 767px) {
+  .si-herofooter { margin-top: var(--sif-mobile-mt, 0px) !important; }
+}
+
+/* MOBILE ONLY: maps span full width */
+@media (max-width: 767px) {
+  .si-map-wrap { width: 100% !important; }
+}
