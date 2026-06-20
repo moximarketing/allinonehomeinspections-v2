@@ -7,15 +7,12 @@
  * re-skinned with AIO content + AIO assets. Colors flow from AIO @theme tokens.
  *
  * FLAGS (unattended build):
- *  - No verified "years experience" number exists for AIO (not in old repo or spec). The spinning
- *    badge ring therefore carries the BRAND NAME ("All In One Home Inspections ·"), not a
- *    fabricated years stat. Swap to a real "N+ Years Experience" ring once confirmed.
- *  - HERO_BG / S_ASSET chosen from available AIO assets (see consts) — confirm art direction.
+ *  - AIO OMITS the spinning experience badge entirely (intentional per-site deviation — AIO does
+ *    not use the SI-family spinning badge/ring). The hero is technician + copy + trust row only.
  *  - Trust-row claims are all sourced: 24-hr reports (AIO FAQ), 4.9★/1,400+ (live meta), DMV
  *    service area (brand.config). None invented.
  */
 
-import { useId } from "react";
 import Image from "next/image";
 import { ClipboardCheck, Star, MapPin } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
@@ -23,7 +20,6 @@ import { Reveal } from "@/components/site/reveal";
 // Image slots match the LIVE site (old allinonehomeinspections repo) exactly.
 const HERO_BG = "/images/hero-bg.webp"; // live hero background
 const TECH_IMG = "/images/hero-inspector.webp"; // live AIO technician cutout (NOT a Super person)
-const BADGE_ASSET = "/images/favicon-300.webp"; // AIO square logomark for the badge center
 
 export function Hero() {
   return (
@@ -54,15 +50,6 @@ export function Hero() {
           aria-hidden
         >
           <Image src={TECH_IMG} alt="" fill priority sizes="36vw" className="object-contain object-right-bottom" />
-        </div>
-
-        {/* Desktop spinning badge */}
-        <div
-          className="hidden lg:block absolute z-20 w-[112px] pointer-events-none"
-          style={{ top: "calc(28% + 20px)", right: "calc((100% - var(--content-rail-max)) / 2 + 335px)" }}
-          aria-hidden
-        >
-          <SpinningBadge />
         </div>
 
         {/* HERO CONTENT */}
@@ -114,14 +101,11 @@ export function Hero() {
                 </div>
               </Reveal>
 
-              {/* Mobile-only [spinning badge | technician] row */}
+              {/* Mobile-only technician (AIO omits the spinning badge) */}
               <Reveal>
-                <div className="mt-4 flex items-end lg:hidden">
-                  <div className="relative z-10 w-[30%] -mr-[6%] self-end" style={{ transform: "translate(20px, -40px) scale(0.75)" }}>
-                    <SpinningBadge />
-                  </div>
-                  <div className="relative -mb-[2px] aspect-[6/7] w-[68%] self-end" aria-hidden>
-                    <Image src={TECH_IMG} alt="" fill sizes="65vw" className="object-cover object-[60%_top]" />
+                <div className="mt-4 flex justify-end lg:hidden">
+                  <div className="relative -mb-[2px] aspect-[6/7] w-[72%] self-end" aria-hidden>
+                    <Image src={TECH_IMG} alt="" fill sizes="72vw" className="object-cover object-[60%_top]" />
                   </div>
                 </div>
               </Reveal>
@@ -143,42 +127,6 @@ function TrustItem({ icon, label, line }: { icon: React.ReactNode; label: string
         <span className="font-semibold text-brand-white">{label}</span>
         <span className="text-sm text-brand-white/80 break-words">{line}</span>
       </span>
-    </div>
-  );
-}
-
-/**
- * Spinning circular text-ring badge — SI-family mechanism (auto-fit via textLength +
- * lengthAdjust). AIO logomark center + BRAND-NAME ring (no fabricated years stat — see file flag).
- */
-function SpinningBadge() {
-  const ringId = useId();
-  return (
-    <div
-      className="experience-spin aspect-square w-full rounded-full bg-white bg-no-repeat p-[15%]"
-      style={{ backgroundImage: `url(${BADGE_ASSET})`, backgroundSize: "46%", backgroundPosition: "center", backgroundOrigin: "border-box" }}
-      role="img"
-      aria-label="All In One Home Inspections"
-    >
-      <svg viewBox="0 0 250.5 250.5" width="100%" style={{ display: "block", width: "100%", height: "auto", overflow: "visible" }} aria-hidden>
-        <defs>
-          <path id={ringId} d="M.25,125.25a125,125,0,1,1,125,125,125,125,0,0,1-125-125" fill="none" />
-        </defs>
-        <text
-          style={{
-            fill: "#24333C",
-            fontSize: "28px",
-            fontWeight: 600,
-            letterSpacing: "0px",
-            textTransform: "uppercase",
-            fontFamily: "var(--font-bricolage), sans-serif",
-          }}
-        >
-          <textPath href={`#${ringId}`} startOffset="0%" textLength={835} lengthAdjust="spacingAndGlyphs">
-            All In One Home Inspections · DMV ·&nbsp;
-          </textPath>
-        </text>
-      </svg>
     </div>
   );
 }

@@ -14,11 +14,31 @@ import { coreFeatures } from "@/content/services";
 
 const ICONS: EkitIconName[] = ["clipboard1", "smartphone1", "edit1"];
 
-export function CoreFeatures() {
+type CoreFeaturesProps = {
+  id?: string;
+  ariaLabel?: string;
+  eyebrow?: string;
+  heading?: string;
+  subhead?: string;
+  trustedBy?: string;
+};
+
+/**
+ * Reusable canonical core-features band. Defaults render the homepage "What Sets Us Apart";
+ * /our-company reuses it with that section's own heading (same 3 pillars, content/services).
+ */
+export function CoreFeatures({
+  id = "about",
+  ariaLabel = "What sets All In One apart",
+  eyebrow = "Why Choose Us",
+  heading = "What Sets Us Apart",
+  subhead = "Buyers, sellers, and investors across the DMV choose All In One for thorough, top-to-bottom inspections — clear reporting, modern tools, and responsive support that help you move forward with confidence.",
+  trustedBy = "Trusted by buyers, agents, and investors throughout the DMV",
+}: CoreFeaturesProps = {}) {
   return (
     <section
-      id="about"
-      aria-label="What sets All In One apart"
+      id={id}
+      aria-label={ariaLabel}
       className="relative mx-[var(--section-margin-x)] my-[var(--section-margin-y)] rounded-[var(--section-radius)] overflow-hidden bg-brand-purple text-brand-white"
     >
       {/* Background photo — fixed parallax */}
@@ -40,16 +60,14 @@ export function CoreFeatures() {
           <div className="text-center mb-12">
             <div className="mb-4 flex justify-center">
               <span className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2 font-display font-semibold text-[15px] leading-[1.22] text-white">
-                Why Choose Us
+                {eyebrow}
               </span>
             </div>
             <h2 className="font-display font-semibold text-[28px] md:text-[36px] lg:text-[44px] leading-[1.1] text-white mb-6 text-center">
-              What Sets Us Apart
+              {heading}
             </h2>
             <p className="font-display font-normal text-base leading-[1.6] text-white max-w-2xl mx-auto text-center">
-              Buyers, sellers, and investors across the DMV choose All In One for thorough,
-              top-to-bottom inspections — clear reporting, modern tools, and responsive support that
-              help you move forward with confidence.
+              {subhead}
             </p>
           </div>
         </Reveal>
@@ -80,7 +98,7 @@ export function CoreFeatures() {
         <Reveal delay={0.4}>
           <div className="border-t border-white/20 pt-6">
             <p className="font-display font-medium text-base leading-[1.6] text-white text-center">
-              Trusted by buyers, agents, and investors throughout the DMV
+              {trustedBy}
             </p>
           </div>
         </Reveal>
