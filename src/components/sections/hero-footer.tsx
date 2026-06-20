@@ -1,53 +1,41 @@
 "use client";
 
 /**
- * Hero Footer — native rebuild of the live homepage scheduler section
- * (spec/extracted/hero-footer-section.json, section 3c81cf0 on page 13126).
+ * Hero Footer — canonical build copied EXACTLY from SI LV (super-inspector-las-vegas)
+ * sections/hero-footer.tsx, re-skinned with AIO content/pricing/color. Replaces AIO's prior
+ * pre-canonical build (gray bg-field-fill h-[58px] rounded-[11px] fields, hardcoded card padding)
+ * so the form matches the family standard property-for-property.
  *
- * Layout: margin-top -92px (overlaps hero), row gap 30:
- * - LEFT (66% - 15px): "Hero CTA Form" white card — icon-box header (red round
- *   calendar icon, "Schedule Your Inspection" / "See instant, exact pricing—calculated
- *   as you book.") + "Real Estate Agent? Click Here" button (external — the AIO agent
- *   scheduler lives on yoursuperinspector.com, verbatim live link), then the 2-STEP
- *   "AIO Schedule Inspection Form", then the SMS consent line.
- * - RIGHT (34% - 15px): "Hero Contact Box" white card — "Get a quote now" /
- *   "Your estimated inspection fee is" / live price / sqft slider (track #75140C).
- *   The live estimate form has NO location select and hides its submit button
- *   (custom CSS) — helper text follows the slider directly.
+ * AIO re-skin (only these differ from SI LV):
+ *   - Pricing = brand.config pricing (base $449; +$0.16/sqft over 2,000; >20yr +$50;
+ *     Pier & Beam +$100; + checked add-on $; 7 AIO add-ons).
+ *   - 3 AIO inspection types; State field has NO pre-fill (live AIO ships none).
+ *   - "Real Estate Agent?" → AIO's live EXTERNAL agent scheduler (yoursuperinspector.com).
+ *   - Section id="schedule" (nav/footer link to /#schedule).
+ *   - Slider fill = AIO crimson #75140C (AIO's live slider color; SI LV uses its purple).
+ *   - Colors flow from AIO @theme tokens (crimson/dark-blue/light-blue).
  *
- * Pricing math — VERBATIM from the live calculator JS
- * (spec/extracted/html-script-home-8cb13d0.txt):
- * base $449 ≤2000 sqft; + $0.16/sqft above 2000; built >20yrs ago +$50;
- * Pier and Beam +$100; + checked add-ons (price parsed from the option label).
- * The live script's Houston −$50 and DFW-only HVAC/Pest branches are DEAD code on
- * this site (no location field exists) — intentionally not reproduced.
- * Slider ↔ sqft field two-way sync per the live script.
- *
- * Submit: stubbed to /api/schedule (success UX + server log). Resend at cutover.
- * Success message verbatim from the live form widget.
+ * Submit: stubbed to /api/schedule (honeypot + log + thank-you; Resend at cutover).
  */
 
 import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
-import { EkitIcon } from "@/components/ui/ekit-icons";
+import { ArrowRight, Calendar } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
 import { brand } from "../../../brand.config";
 
-// Pricing is sourced from brand.config (single source of truth) — Phase B wiring.
-const PRICING = brand.pricing;
+const P = brand.pricing;
 
-// Verbatim from the live form (field_5d8c07c) — first option is the placeholder.
+// Verbatim from the live AIO form (field_5d8c07c) — first option is the placeholder.
 const INSPECTION_TYPES = [
   "Standard Inspection w/ Termite",
   "New Construction: Phase III Inspection",
   "Sewer Camera Inspection",
 ] as const;
 
-// Verbatim option list from the live form (field_b587733) — all 7 AIO add-ons.
-// Add-ons sourced from brand.pricing.addOns (price parsed from the label at runtime).
-const ADD_ONS = PRICING.addOns;
+// All 7 AIO add-ons, sourced from brand.pricing.addOns (price parsed from the label).
+const ADD_ONS = P.addOns;
 
-// Verbatim from the live form (field_3e634c9) — first option is the placeholder.
 const HEAR_ABOUT_OPTIONS = [
   "I am a Returning Client",
   "I am a Returning Real Estate Agent",
@@ -66,26 +54,26 @@ const HEAR_ABOUT_OPTIONS = [
 const SUCCESS_MESSAGE =
   "Thank you for submitting your inspection scheduling request. A team member will reach out shortly to get you scheduled!";
 
-// All scheduler fields match the submit button height (58px) — live rows are uniform.
+// Field chrome — canonical (SI LV): white bg, gray border, h-12, rounded-md, brand-red focus ring.
 const FIELD =
-  "h-[58px] w-full rounded-[11px] border-0 bg-field-fill px-4 text-[14px] font-medium leading-[2.5] text-black placeholder:text-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-brand-purple";
+  "block w-full h-12 rounded-md border border-gray-300 bg-white px-4 font-display text-base text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300";
 
-function priceFor(opts: { sqft: number; yearBuilt: string; foundation: string; addOns: Set<number> }) {
+function priceFor(opts: {
+  sqft: number;
+  yearBuilt: string;
+  foundation: string;
+  addOns: Set<number>;
+}) {
   const { sqft, yearBuilt, foundation, addOns } = opts;
-  // Live math, sourced from brand.pricing ($449 base, $0.16/sqft over 2000)
-  let price =
-    sqft <= PRICING.sqftThreshold
-      ? PRICING.base
-      : PRICING.base + (sqft - PRICING.sqftThreshold) * PRICING.perSqftOver;
+  let price = sqft <= P.sqftThreshold ? P.base : P.base + (sqft - P.sqftThreshold) * P.perSqftOver;
   let isOlder = false;
   if (yearBuilt.trim().length === 4) {
     const yb = parseInt(yearBuilt, 10);
-    const currentYear = new Date().getFullYear();
-    isOlder = yb > 0 && currentYear - yb > PRICING.olderHomeYears;
+    isOlder = yb > 0 && new Date().getFullYear() - yb > P.olderHomeYears;
   }
-  if (isOlder) price += PRICING.olderHomeSurcharge;
+  if (isOlder) price += P.olderHomeSurcharge;
   const isPier = foundation === "Pier and Beam";
-  if (isPier) price += PRICING.pierAndBeamSurcharge;
+  if (isPier) price += P.pierAndBeamSurcharge;
   for (const i of addOns) {
     const m = ADD_ONS[i].match(/\$(\d+(?:\.\d+)?)/);
     if (m) price += parseFloat(m[1]);
@@ -93,10 +81,12 @@ function priceFor(opts: { sqft: number; yearBuilt: string; foundation: string; a
   return { price: Math.round(price), isOlder, isPier };
 }
 
-export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overlap?: string; mobileOverlap?: string } = {}) {
-  // Shared calculator state (live: two synced Elementor forms + custom JS)
-  const [sqft, setSqft] = useState(2000);
-  const [sqftActivated, setSqftActivated] = useState(false); // live: sqft field placeholder until touched
+export function HeroFooter({
+  overlap = "calc(-1 * var(--card-overlap))",
+  mobileOverlap = "calc(-1 * var(--card-overlap))",
+}: { overlap?: string; mobileOverlap?: string } = {}) {
+  const [sqft, setSqft] = useState<number>(P.sliderDefault);
+  const [sqftActivated, setSqftActivated] = useState(false);
   const [sqftFieldText, setSqftFieldText] = useState("");
   const [yearBuilt, setYearBuilt] = useState("");
   const [foundation, setFoundation] = useState("");
@@ -123,8 +113,8 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
     const cleaned = raw.replace(/,/g, "").replace(/\s*sqft/i, "").trim();
     const parsed = parseInt(cleaned, 10);
     if (!isNaN(parsed) && cleaned.length >= 3) {
-      const clamped = Math.min(Math.max(parsed, PRICING.sliderMin), PRICING.sliderMax);
-      setSqft(Math.round(clamped / PRICING.sliderStep) * PRICING.sliderStep);
+      const clamped = Math.min(Math.max(parsed, P.sliderMin), P.sliderMax);
+      setSqft(Math.round(clamped / P.sliderStep) * P.sliderStep);
     }
   }, []);
 
@@ -139,7 +129,6 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (step === 1) {
-      // live: page-1 button advances via native required validation
       if (!e.currentTarget.checkValidity()) {
         e.currentTarget.reportValidity();
         return;
@@ -158,6 +147,7 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          form: "AIO Schedule Inspection Form",
           ...data,
           sqft,
           yearBuilt,
@@ -167,74 +157,63 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
         }),
       });
     } catch {
-      // stub mode: still show success UX, payload is logged server-side when reachable
+      /* stub mode: still show success UX; payload logged server-side when reachable */
     }
     setSubmitting(false);
     setSubmitted(true);
   }
 
-  const sliderPct = ((sqft - PRICING.sliderMin) / (PRICING.sliderMax - PRICING.sliderMin)) * 100;
+  const sliderPct = ((sqft - P.sliderMin) / (P.sliderMax - P.sliderMin)) * 100;
 
   return (
     <section
       aria-label="Schedule your inspection"
       id="schedule"
-      // .si-herofooter: mobile zeroes the hero overlap on supporting pages;
-      // the homepage keeps the inspector-torso overlap (Moxi playbook B.16)
-      className="si-herofooter relative z-10 mx-auto flex flex-col px-0 py-[10px] md:px-[10px] lg:px-[50px]"
+      className="si-herofooter relative z-30 mb-[var(--section-margin-y)]"
       style={{ marginTop: overlap, "--sif-mobile-mt": mobileOverlap } as React.CSSProperties}
     >
-      {/* Hero Footer has no boxed_width → kit default 1300px content rail */}
-      <div className="mx-auto flex w-full max-w-[1300px] flex-row flex-wrap gap-x-0 gap-y-[20px] px-[25px] md:px-[10px] lg:gap-[30px] lg:px-0">
-        {/* ───────────────── Hero CTA Form (66%) — renders AFTER the quote box
-             because the live Hero Contact Box has _flex_order: start ───────────────── */}
+      {/* Card group on the floating-card width formula — same as the nav pill + content rail. */}
+      <div
+        className="flex w-full flex-row flex-wrap gap-x-0 gap-y-[20px] lg:gap-[30px]"
+        style={{
+          width: "min(var(--content-rail-max), 100% - 2 * (var(--section-margin-x) + var(--card-inset)))",
+          marginInline: "auto",
+        }}
+      >
+        {/* ───────────────── Hero CTA Form (66%) — AFTER the quote box (_flex_order: start) ───────────────── */}
         <Reveal className="order-2 w-full lg:w-[calc(66%-15px)]">
-          <div className="flex h-full flex-col gap-5 rounded-[12px] bg-white p-[25px] shadow-[0_0_22px_rgba(0,0,0,0.19)] md:p-[20px_20px_0] lg:gap-5 lg:p-[45px_45px_15px]">
-            {/* Header row + agent button, divider under */}
+          <div className="flex h-full flex-col gap-5 rounded-2xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 p-[var(--card-pad)]">
             <div className="border-b border-brand-lt-gr pb-[25px]">
               <div className="flex flex-col gap-4">
-                {/* mobile: title/sub extend to the card's full width (same right
-                    edge as the agent button below) — Moxi playbook */}
                 <div className="flex w-full max-w-none items-start gap-[10px] md:max-w-[457px] md:items-center md:gap-[15px]">
-                  <span className="flex shrink-0 items-center justify-center rounded-full bg-brand-red p-[10px] text-white md:p-3">
-                    <EkitIcon name="calendar-1" className="h-5 w-5 md:h-[30px] md:w-[30px]" />
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-red text-white">
+                    <Calendar className="h-7 w-7" aria-hidden />
                   </span>
                   <span>
-                    <span className="block text-[20px] font-semibold leading-[1.1] text-brand-primary md:text-[17px] lg:text-[27px]">
+                    <span className="block font-display font-bold text-2xl leading-tight text-brand-primary">
                       Schedule Your Inspection
                     </span>
-                    <span className="mt-[6px] block text-[13px] font-normal leading-[1.6] text-brand-text lg:mt-0 lg:text-[16px]">
+                    <span className="mt-[6px] block font-display text-base font-normal leading-[1.6] text-brand-text lg:mt-0">
                       See instant, exact pricing—calculated as you book.
                     </span>
                   </span>
                 </div>
-                {/* Live link is EXTERNAL: the AIO agent scheduler is hosted on
-                    yoursuperinspector.com (verbatim from the live button widget) */}
+                {/* AIO live agent scheduler is EXTERNAL (yoursuperinspector.com) — keep target, canonical style */}
                 <a
                   href="https://yoursuperinspector.com/agent-scheduler-all-in-one-dc-maryland-virginia/"
-                  className="inline-flex w-full items-center justify-center gap-[9px] rounded-md border-2 border-brand-red bg-brand-red px-6 pb-[13px] pt-[14px] text-[16px] font-medium leading-none text-white transition-colors duration-200 hover:border-brand-purple hover:bg-brand-purple"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-brand-red px-7 font-display font-semibold text-[15px] text-white transition-colors duration-500 ease-out hover:bg-brand-red/90 cursor-pointer"
                 >
                   Real Estate Agent? Click Here
-                  <EkitIcon name="right-arrow" className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" aria-hidden />
                 </a>
               </div>
             </div>
 
             {submitted ? (
-              <p className="py-10 text-center text-[16px] font-medium text-brand-purple">
-                {SUCCESS_MESSAGE}
-              </p>
+              <p className="py-10 text-center text-[16px] font-medium text-brand-purple">{SUCCESS_MESSAGE}</p>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-[15px]">
-                {/* honeypot */}
-                <input
-                  type="text"
-                  name="honeypot"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  className="hidden"
-                  aria-hidden
-                />
+                <input type="text" name="honeypot" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 
                 {/* ── STEP 1 ── */}
                 <div className={step === 1 ? "flex flex-col gap-[15px]" : "hidden"}>
@@ -246,11 +225,11 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                   <div className="grid grid-cols-1 gap-[15px] md:grid-cols-[40fr_20fr_20fr_20fr]">
                     <input name="address" required={step === 1} placeholder="Enter Full Address" aria-label="Full Address" className={FIELD} />
                     <input name="city" required={step === 1} placeholder="Enter City" aria-label="City" className={FIELD} />
-                    {/* live: placeholder "State", NO pre-filled value (unlike the Texas sister site) */}
+                    {/* AIO live ships NO state pre-fill */}
                     <input name="state" required={step === 1} placeholder="State" aria-label="State" className={FIELD} />
                     <input name="zip" required={step === 1} placeholder="Enter Zip" aria-label="Zip Code" className={FIELD} />
                   </div>
-                  <div className="grid grid-cols-1 gap-[15px] md:grid-cols-[40fr_30fr_30fr]">
+                  <div className="grid grid-cols-1 gap-[15px] md:grid-cols-[30fr_40fr_30fr]">
                     <input
                       name="sqftscheduling"
                       required={step === 1}
@@ -266,7 +245,7 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                       required={step === 1}
                       aria-label="Inspection Type"
                       defaultValue=""
-                      className={`${FIELD} si-has-placeholder`}
+                      className={`${FIELD} si-select-placeholder`}
                     >
                       <option value="" disabled>
                         Inspection Type
@@ -279,10 +258,10 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                     </select>
                     <button
                       type="submit"
-                      className="inline-flex items-center justify-center gap-[7px] rounded-[10px] bg-brand-red px-[36px] py-[22px] text-[14px] font-normal leading-none text-white transition-colors duration-200 hover:bg-brand-purple"
+                      className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-brand-red px-7 font-display font-semibold text-[15px] text-white transition-colors duration-500 ease-out hover:bg-brand-red/90 cursor-pointer"
                     >
                       Schedule Now
-                      <EkitIcon name="arrow-right-circle" className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" aria-hidden />
                     </button>
                   </div>
                 </div>
@@ -318,7 +297,6 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                     </select>
                   </div>
 
-                  {/* Conditional price labels — VERBATIM live html-field text */}
                   {yearBuilt.trim().length === 4 && isOlder && (
                     <p className="text-[16px] leading-[1.6] text-brand-text">
                       <b>Home Older Than 20 Years: $50.00</b>
@@ -330,11 +308,8 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                     </p>
                   )}
 
-                  {/* Add-ons — verbatim live label + options (no location gating on this site) */}
                   <fieldset>
-                    <legend className="mb-2 text-[16px] font-normal leading-[1.6] text-brand-text">
-                      Service Add-Ons
-                    </legend>
+                    <legend className="mb-2 text-[16px] font-normal leading-[1.6] text-brand-text">Service Add-Ons</legend>
                     <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                       {ADD_ONS.map((label, i) => (
                         <label key={label} className="flex items-center gap-2 text-[14px] text-brand-text">
@@ -359,7 +334,7 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                     required={step === 2}
                     aria-label="How did you hear about us?"
                     defaultValue=""
-                    className={`${FIELD} si-has-placeholder`}
+                    className={`${FIELD} si-select-placeholder`}
                   >
                     <option value="" disabled>
                       How did you hear about us?
@@ -375,22 +350,22 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="inline-flex items-center justify-center rounded-[10px] border border-brand-lt-gr bg-white px-[36px] py-[22px] text-[14px] font-normal leading-none text-brand-text transition-colors duration-200 hover:border-brand-purple hover:text-brand-purple"
+                      className="inline-flex h-12 items-center justify-center rounded-md border border-gray-300 bg-white px-7 font-display font-semibold text-[15px] text-brand-text transition-colors duration-500 ease-out hover:border-brand-red hover:text-brand-red cursor-pointer"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center justify-center gap-[7px] rounded-[10px] bg-brand-red px-[36px] py-[22px] text-[14px] font-normal leading-none text-white transition-colors duration-200 hover:bg-brand-purple disabled:opacity-60"
+                      className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-brand-red px-7 font-display font-semibold text-[15px] text-white transition-colors duration-500 ease-out hover:bg-brand-red/90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       {submitting ? "Sending…" : "Schedule Now"}
-                      <EkitIcon name="arrow-right-circle" className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" aria-hidden />
                     </button>
                   </div>
                 </div>
 
-                {/* SMS consent — verbatim from the live text-editor widget (411354b) */}
+                {/* SMS consent — verbatim */}
                 <p className="max-w-full text-[11.5px] font-normal leading-[1.6] tracking-[-0.3px] text-brand-text md:max-w-[753px]">
                   By providing a telephone number and submitting this form you are consenting to be
                   contacted by SMS text message. Message &amp; data rates may apply. Message
@@ -406,15 +381,12 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
           </div>
         </Reveal>
 
-        {/* ───────────────── Hero Contact Box (simple quote, 34%) — _flex_order: start → FIRST/LEFT ───────────────── */}
+        {/* ───────────────── Hero Contact Box (estimate, 34%) — _flex_order: start → FIRST/LEFT ───────────────── */}
         <Reveal delay={0.1} className="order-1 w-full lg:mt-0 lg:w-[calc(34%-15px)]">
-          <div className="flex h-full flex-col justify-center rounded-[12px] bg-brand-accent py-[35px] shadow-[0_0_22px_rgba(0,0,0,0.19)] md:p-[50px] lg:px-0 lg:py-[25px]">
+          <div className="flex h-full flex-col justify-center rounded-2xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-black/5 p-[var(--card-pad)]">
             <div className="flex flex-col items-center gap-[15px]">
-              {/* Live computed color: #888888 (LT GR global overrides the literal) */}
-              <span className="text-[14px] font-semibold leading-[1.22] text-brand-lt-gr">
-                Get a quote now
-              </span>
-              <span className="max-w-[232px] text-center text-[20px] font-semibold leading-[1.1] text-brand-primary md:max-w-none md:text-[22px] lg:max-w-[268px] lg:text-[27px]">
+              <span className="font-display text-[15px] font-semibold leading-[1.22] text-brand-lt-gr">Get a quote now</span>
+              <span className="max-w-[232px] text-center font-display font-bold text-[22px] leading-tight text-brand-primary md:max-w-none md:text-[26px] lg:max-w-[268px]">
                 Your estimated inspection fee is
               </span>
               <span
@@ -424,14 +396,14 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                 {formatted}
               </span>
 
-              {/* sqft slider — live track/progress color #75140C (brand red) */}
+              {/* sqft slider — AIO crimson track (#75140C); SI LV uses its purple */}
               <div className="si-slider-wrap w-[80%] lg:w-[70%]">
                 <input
                   id="sqftRange"
                   type="range"
-                  min={PRICING.sliderMin}
-                  max={PRICING.sliderMax}
-                  step={PRICING.sliderStep}
+                  min={P.sliderMin}
+                  max={P.sliderMax}
+                  step={P.sliderStep}
                   value={sqft}
                   aria-label="Home square footage"
                   onChange={(e) => onSlider(parseInt(e.target.value, 10))}
@@ -446,9 +418,6 @@ export function HeroFooter({ overlap = "-92px", mobileOverlap = "0px" }: { overl
                 </div>
               </div>
 
-              {/* Live hides the submit button entirely (custom CSS:
-                  .elementor-field-type-submit { display:none }) and has NO location
-                  select on this site — helper text follows directly. */}
               <p className="max-w-[222px] text-center text-[14px] font-normal leading-[1.6] text-brand-text lg:max-w-[316px]">
                 Add services and see your exact inspection cost update live as you schedule →
               </p>
