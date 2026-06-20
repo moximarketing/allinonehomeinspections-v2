@@ -7,9 +7,11 @@
  *
  * AIO PER-SITE DEVIATIONS (intentional, NOT drift):
  *  1. Logo = AIO All-In-One wordmark (/images/source/All-In-One-Logo.webp) — never a Super "S".
- *  2. Nav glass = HIGHER white (bg-white/30 vs SI LV's bg-white/[0.078]). AIO's logo is DARK
+ *  2. Nav glass = HIGHER white (bg-white/45 vs SI LV's bg-white/[0.078]). AIO's logo is DARK
  *     (dark roofline + wordmark), so the canonical low-white glass (tuned for the bright Super "S")
- *     doesn't give AIO's dark logo enough contrast. Same blur/structure/token formula, more white.
+ *     doesn't give AIO's dark logo enough contrast. Bumped 30→45 for clearer dark-logo contrast.
+ *     Still liquid-glass (translucent + backdrop-blur-xl) — same blur/structure/rounding/token
+ *     formula; only the white background opacity changes. NOT a solid white bar.
  */
 
 import { useEffect, useState } from "react";
@@ -67,9 +69,9 @@ export function SiteHeader() {
 
   return (
     <>
-      {/* Nav pill = floating card. AIO glass: bg-white/30 (higher white for dark-logo contrast). */}
+      {/* Nav pill = floating card. AIO glass: bg-white/45 (higher white for dark-logo contrast). */}
       <div
-        className="absolute inset-x-0 top-0 z-[100] px-[12px] py-[14px] md:px-[20px] md:py-[20px] lg:p-[25px] rounded-[var(--section-radius)] bg-white/30 backdrop-blur-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+        className="absolute inset-x-0 top-0 z-[100] px-[12px] py-[14px] md:px-[20px] md:py-[20px] lg:p-[25px] rounded-[var(--section-radius)] bg-white/45 backdrop-blur-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
         style={{
           width: "min(var(--content-rail-max), 100% - 2 * (var(--section-margin-x) + var(--card-inset)))",
           marginInline: "auto",
