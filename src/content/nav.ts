@@ -10,7 +10,7 @@ export const mainNav: NavItem[] = [
   { label: "FAQ", href: "/#faq" },
   {
     label: "Sample Reports",
-    href: "https://app.spectora.com/home-inspectors/super-inspector-virginia/sample_report/recaptcha_validation_form?sample_id=21145",
+    href: "https://app.spectora.com/home-inspectors/super-inspector-virginia",
     external: true,
   },
   { label: "Our Team", href: "/inspectors-mission-super-team-the-team/" },
