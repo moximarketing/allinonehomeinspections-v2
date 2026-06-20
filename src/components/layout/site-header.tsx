@@ -99,7 +99,7 @@ export function SiteHeader() {
                     <NavLink
                       href={item.href}
                       external={item.external}
-                      className="flex items-center gap-1 font-display font-semibold text-[16px] leading-[16px] px-[8px] py-[14px] text-white hover:text-brand-red transition-colors duration-500 whitespace-nowrap"
+                      className="flex items-center gap-1 font-display font-semibold text-[16px] leading-[16px] px-[8px] py-[14px] text-brand-purple hover:text-brand-red transition-colors duration-500 whitespace-nowrap"
                     >
                       {item.label}
                       <ChevronDown
@@ -132,7 +132,7 @@ export function SiteHeader() {
                   key={item.label}
                   href={item.href}
                   external={item.external}
-                  className="inline-flex items-center gap-1 whitespace-nowrap font-display font-semibold text-[16px] leading-[16px] px-[8px] py-[14px] text-white transition-colors duration-500 ease-out hover:text-brand-red"
+                  className="inline-flex items-center gap-1 whitespace-nowrap font-display font-semibold text-[16px] leading-[16px] px-[8px] py-[14px] text-brand-purple transition-colors duration-500 ease-out hover:text-brand-red"
                 >
                   {item.label}
                 </NavLink>
@@ -144,7 +144,7 @@ export function SiteHeader() {
           <div className="hidden min-[1440px]:flex items-center gap-3 shrink-0">
             <a
               href={PHONE_TEL}
-              className="inline-flex items-center rounded-md border border-white bg-transparent px-7 py-5 font-display font-semibold text-[16px] leading-[16px] text-white transition-colors duration-500 ease-out hover:bg-white hover:text-brand-purple cursor-pointer"
+              className="inline-flex items-center rounded-md border border-brand-purple bg-transparent px-7 py-5 font-display font-semibold text-[16px] leading-[16px] text-brand-purple transition-colors duration-500 ease-out hover:bg-brand-purple hover:text-white cursor-pointer"
             >
               {PHONE_DISPLAY}
             </a>
