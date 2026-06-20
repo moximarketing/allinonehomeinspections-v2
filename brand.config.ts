@@ -1,3 +1,24 @@
+// Default OG/Twitter share images, wired into each route's metadata. Declared
+// OUTSIDE brand's `as const` so the arrays stay mutable — Next's OGImage[] /
+// twitter image types reject readonly tuples. Points at the canonical
+// file-convention routes generated from src/lib/og.tsx.
+const shareImages = {
+  og: [
+    {
+      url: "/opengraph-image",
+      width: 1200,
+      height: 630,
+      alt: "All In One Home Inspections — Your Trusted Home Inspection Team in the DMV",
+    },
+  ],
+  twitter: [
+    {
+      url: "/twitter-image",
+      alt: "All In One Home Inspections — Your Trusted Home Inspection Team in the DMV",
+    },
+  ],
+};
+
 export const brand = {
   // Identity
   name: "All In One Home Inspections",
@@ -98,4 +119,27 @@ export const brand = {
       "Mold Inspection: $300.00",
     ],
   },
+
+  // ── Canonical OG / social-share theme tokens ────────────────────────────────
+  // Drives the reusable Super-family OG card (src/lib/og.tsx). Hex values mirror
+  // globals.css @theme + GLOBAL_COLORS (token names: brand-purple/red/lava).
+  // To port the OG card: recolor here, change ogTagline, and swap the logo asset
+  // referenced in src/lib/og.tsx (loaded module-relative for clean build tracing).
+  theme: {
+    colors: {
+      background: "#24333C", // brand-purple slot — AIO dark blue (card bg)
+      backgroundAccent: "#18242B", // darker shade for the gradient depth
+      accent: "#75140C", // brand-red — crimson rule/detail
+      surface: "#FFFFFF", // light badge behind the (dark) roofline mark
+      text: "#FFFFFF", // primary text on the dark card
+      textMuted: "#98AAB7", // brand-lava — tagline / footer text
+    },
+    // Short marketing line for the share card; falls back to brand.tagline.
+    ogTagline: "Your Trusted Home Inspection Team in the DMV",
+  },
+
+  // Default OG/Twitter share images (defined as `shareImages` above the brand
+  // object so the arrays stay mutable for Next's metadata types). Wired per-route
+  // because Next replaces — not merges — openGraph across segments.
+  shareImages,
 } as const;

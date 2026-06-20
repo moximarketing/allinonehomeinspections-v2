@@ -29,8 +29,9 @@ export const metadata: Metadata = {
     type: "website",
     siteName: brand.name,
     locale: "en_US",
+    images: brand.shareImages.og,
   },
-  twitter: { card: "summary_large_image", title: m.title, description: m.description },
+  twitter: { card: "summary_large_image", title: m.title, description: m.description, images: brand.shareImages.twitter },
 };
 
 export default function HomePage() {

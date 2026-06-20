@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   title: { absolute: m.title },
   description: m.description,
   alternates: { canonical: URL },
-  openGraph: { title: m.title, description: m.description, url: URL, type: "website", siteName: brand.name, locale: "en_US" },
-  twitter: { card: "summary_large_image", title: m.title, description: m.description },
+  openGraph: { title: m.title, description: m.description, url: URL, type: "website", siteName: brand.name, locale: "en_US", images: brand.shareImages.og },
+  twitter: { card: "summary_large_image", title: m.title, description: m.description, images: brand.shareImages.twitter },
 };
 
 type Member = { name: string; role?: string; bio?: string; license?: string; photo: string };

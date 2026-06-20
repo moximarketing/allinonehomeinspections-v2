@@ -58,8 +58,8 @@ export async function generateMetadata({
         title: { absolute: title },
         description,
         alternates: { canonical: url },
-        openGraph: { title, description, url, type: "article", siteName: brand.name, locale: "en_US" },
-        twitter: { card: "summary_large_image", title, description },
+        openGraph: { title, description, url, type: "article", siteName: brand.name, locale: "en_US", images: brand.shareImages.og },
+        twitter: { card: "summary_large_image", title, description, images: brand.shareImages.twitter },
       };
     }
   }
@@ -75,8 +75,9 @@ export async function generateMetadata({
       type: "website",
       siteName: brand.name,
       locale: "en_US",
+      images: brand.shareImages.og,
     },
-    twitter: { card: "summary_large_image", title: m.title, description: m.description },
+    twitter: { card: "summary_large_image", title: m.title, description: m.description, images: brand.shareImages.twitter },
   };
 }
 
