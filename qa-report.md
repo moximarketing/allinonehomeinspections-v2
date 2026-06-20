@@ -159,3 +159,7 @@ extraction). Content verbatim from live; flag-don't-fix on live content bugs (pa
    verified byte-identical against the existing "checkmark" glyph.
 3. **Sheets row format VERIFIED** against the real failed-queue payload (see updated flag 14)
    + JOEL ACTION: retry the lost Apr-25 lead in wp-admin → Tools → Form Sheets Queue.
+
+## 2026-06-20 — Vercel Git connection verified
+
+Git push-to-deploy connected (live `allinonehomeinspections` project → moximarketing/allinonehomeinspections-v2 `main`). This line is a harmless end-to-end deploy test.
