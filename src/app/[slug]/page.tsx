@@ -27,6 +27,7 @@ const NATIVE_SLUGS = new Set([
   "reviews",
   "inspectors-mission-super-team-the-team",
   "our-company",
+  "careers",
 ]);
 
 export function generateStaticParams() {
