@@ -3,17 +3,20 @@ import { getMeta, getPageBySlug } from "@/lib/elementor/data";
 import { collectFaqs } from "@/lib/elementor/faq";
 import { RenderElement } from "@/components/elementor/render";
 import { CoreFeatures } from "@/components/sections/core-features";
-import { injectBreadcrumb } from "@/lib/breadcrumb-inject";
+import { PageHero } from "@/components/site/page-hero";
 import { jsonLd, faqSchema, breadcrumbSchema } from "@/lib/schema";
 import { brand } from "../../../brand.config";
 
 /**
- * Our Company — the live Elementor page (slug `our-company`) through the generic renderer,
- * EXCEPT the trailing "Core Feature" section ("Thorough Inspections. Clear Answers. Ongoing
- * Support.") which strayed from the canonical build — it is REPLACED wholesale with the canonical
- * <CoreFeatures> (HVAC trust-section: bg-black/65 overlay, glass pillars, subhead, canonical type),
- * re-skinned with that section's own heading + its 3 pillars (= content/services coreFeatures).
- * Other sections (hero/services/50-50/faqs) render verbatim from live data.
+ * Our Company — the live Elementor page (slug `our-company`) through the generic renderer, with
+ * TWO canonical swaps:
+ *   1. HERO: the live Elementor header section (element 0) is dropped and replaced with the
+ *      canonical <PageHero> — the SAME component every interior page uses (/our-team, /contact-us,
+ *      /reviews). This keeps every interior hero identical by construction (gradient band,
+ *      breadcrumb, H1 36/48/58, --hero-pad-top, content-rail alignment).
+ *   2. "Core Feature" section → canonical <CoreFeatures> (HVAC trust-section), re-skinned with that
+ *      section's heading + its 3 pillars (= content/services coreFeatures).
+ * The remaining live sections (services / 50-50 / faqs) render verbatim from live data.
  */
 
 const SLUG = "our-company";
@@ -42,7 +45,12 @@ export default function OurCompanyPage() {
     <>
       {faqs.length > 0 && jsonLd(faqSchema(faqs))}
       {jsonLd(breadcrumbSchema(trail))}
-      {page.elements.map((el, i) => {
+
+      {/* Canonical interior hero — identical to /our-team, /contact-us, /reviews (PageHero). */}
+      <PageHero title="Our Company" breadcrumbs={[{ label: "Home", href: "/" }, { label: CRUMB }]} />
+
+      {/* Live sections AFTER the hero (element 0 = the old Elementor header, now replaced above). */}
+      {page.elements.slice(1).map((el) => {
         if (el.settings._title === "Core Feature") {
           // Strays section replaced wholesale with the canonical core-features build.
           return (
@@ -55,12 +63,7 @@ export default function OurCompanyPage() {
             />
           );
         }
-        return (
-          <RenderElement
-            key={el.id}
-            el={i === 0 ? injectBreadcrumb(el, trail) : el}
-          />
-        );
+        return <RenderElement key={el.id} el={el} />;
       })}
     </>
   );
