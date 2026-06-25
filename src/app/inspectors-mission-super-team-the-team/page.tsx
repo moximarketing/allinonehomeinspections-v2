@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: m.title, description: m.description, images: brand.shareImages.twitter },
 };
 
-type Member = { name: string; role?: string; bio?: string; license?: string; photo: string };
+type Member = { name: string; role?: string; bio?: string; license?: string; email?: string; phone?: string; photo: string };
 
 const LEADERSHIP: Member[] = [
   { name: "Blake Williams", role: "Owner / Founder", photo: "/images/team/blake.webp", bio: "Our trailblazer and visionary, with a cowboy’s spirit of adventure. (He’s got the hat and boots to match). He inspires our “Yes” mindset, and continually empowers our team to deliver excellent service to everyone we serve." },
@@ -51,6 +51,9 @@ const INSPECTORS: Member[] = [
   { name: "Jeremy St. Pierre", role: "Environmental Technician", license: "MREC License #34427", photo: "/images/team/jeremy.webp" },
   { name: "Steven Flynn", role: "Inspector", license: "MREC License #31178", photo: "/images/team/steven.webp" },
   { name: "Jay Juron", role: "Inspector", photo: "/images/team/jay.webp" },
+  { name: "Dan Deboodt", role: "Home Inspector", license: "MREC #35878", email: "dan@allinonehomeinspections.com", phone: "(405) 414-6712", photo: "/images/team/dan.webp" },
+  { name: "Justin Barrick", role: "Home Inspector", email: "jbarrick@allinonehomeinspections.com", phone: "(717) 679-1275", photo: "/images/team/justin.webp" },
+  { name: "Alex Rhynes", role: "Environmental Technician", email: "arhynes@allinonehomeinspections.com", phone: "(301) 633-5999", photo: "/images/team/alex.webp" },
 ];
 
 function MemberCard({ m }: { m: Member }) {
@@ -69,6 +72,20 @@ function MemberCard({ m }: { m: Member }) {
         <h3 className="text-[26px] font-bold leading-[1.1] text-brand-primary md:text-[30px] lg:text-[29px]">{m.name}</h3>
         {m.role && <p className="mt-2 text-[15px] font-semibold text-brand-lt-gr lg:text-[16px]">{m.role}</p>}
         {m.license && <p className="mt-1 text-[14px] font-semibold text-brand-red">{m.license}</p>}
+        {(m.email || m.phone) && (
+          <div className="mt-3 flex flex-col gap-1 text-[14px] font-semibold text-brand-lt-gr">
+            {m.email && (
+              <a href={`mailto:${m.email}`} className="break-words transition-colors hover:text-brand-red">
+                {m.email}
+              </a>
+            )}
+            {m.phone && (
+              <a href={`tel:+1${m.phone.replace(/\D/g, "")}`} className="transition-colors hover:text-brand-red">
+                {m.phone}
+              </a>
+            )}
+          </div>
+        )}
         {m.bio && <p className="mt-4 text-justify text-[15px] font-normal leading-[1.6] text-brand-text">{m.bio}</p>}
       </div>
     </article>
