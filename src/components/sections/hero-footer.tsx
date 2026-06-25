@@ -365,16 +365,21 @@ export function HeroFooter({
                   </div>
                 </div>
 
-                {/* SMS consent — verbatim */}
+                {/* SMS consent — verbatim (Twilio 10DLC) */}
                 <p className="max-w-full text-[11.5px] font-normal leading-[1.6] tracking-[-0.3px] text-brand-text md:max-w-[753px]">
-                  By providing a telephone number and submitting this form you are consenting to be
-                  contacted by SMS text message. Message &amp; data rates may apply. Message
-                  frequency may vary.{" "}
-                  <Link href="/privacy-policy/" className="font-bold text-brand-purple">
+                  By providing your phone number and submitting this form, you agree to receive
+                  recurring SMS messages from All In One Home Inspections related to scheduling,
+                  confirming, following up on your home inspection appointment, and marketing &amp;
+                  sales. Message frequency varies. Message and data rates may apply. Reply STOP to
+                  opt out, reply HELP for help. View our{" "}
+                  <Link href="/privacy-policy/" target="_blank" rel="noopener" className="font-bold text-brand-purple">
                     Privacy Policy
+                  </Link>{" "}
+                  &amp;{" "}
+                  <Link href="/terms-of-service/" target="_blank" rel="noopener" className="font-bold text-brand-purple">
+                    Terms and Conditions
                   </Link>
-                  . Reply Help for more information. You can reply STOP to opt-out of further
-                  messaging.
+                  .
                 </p>
               </form>
             )}

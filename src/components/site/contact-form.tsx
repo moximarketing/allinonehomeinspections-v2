@@ -74,12 +74,18 @@ export function ContactForm() {
         <ArrowRight className="h-4 w-4" aria-hidden />
       </button>
       <p className="mt-1 font-display text-[13px] leading-[1.6] text-brand-text/80">
-        By providing a telephone number and submitting this form you are consenting to be contacted by SMS text
-        message. Message &amp; data rates may apply. Message frequency may vary.{" "}
-        <Link href="/privacy-policy/" className="underline hover:text-brand-red">
+        By providing your phone number and submitting this form, you agree to receive recurring SMS
+        messages from All In One Home Inspections related to scheduling, confirming, following up on
+        your home inspection appointment, and marketing &amp; sales. Message frequency varies.
+        Message and data rates may apply. Reply STOP to opt out, reply HELP for help. View our{" "}
+        <Link href="/privacy-policy/" target="_blank" rel="noopener" className="underline hover:text-brand-red">
           Privacy Policy
+        </Link>{" "}
+        &amp;{" "}
+        <Link href="/terms-of-service/" target="_blank" rel="noopener" className="underline hover:text-brand-red">
+          Terms and Conditions
         </Link>
-        . Reply HELP for more information. You can reply STOP to opt-out of further messaging.
+        .
       </p>
     </form>
   );
