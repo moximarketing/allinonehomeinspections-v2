@@ -42,8 +42,8 @@ const LEADERSHIP: Member[] = [
 ];
 
 const SUPPORT: Member[] = [
-  { name: "Anastasia Clements", role: "Utility Sales Lead", email: "office@allinonehomeinspections.com", photo: "/images/team/anastasia.webp" },
-  { name: "Kiki Durrough", role: "Client Care Team Manager", email: "office@allinonehomeinspections.com", photo: "/images/team/kiki.webp" },
+  { name: "Anastasia Clements", role: "Home Services Team Lead", email: "office@allinonehomeinspections.com", photo: "/images/team/anastasia.webp" },
+  { name: "Kiki Durrough", role: "Home Services Team Rep", email: "office@allinonehomeinspections.com", photo: "/images/team/kiki.webp" },
 ];
 
 const INSPECTORS: Member[] = [
