@@ -13,14 +13,19 @@ import { Reveal } from "@/components/site/reveal";
  * per direction; flagged in qa-report.md / lib/lead.ts).
  */
 
-type Department = { name: string; roles: string[] };
+type Role = { name: string; href?: string };
+type Department = { name: string; roles: Role[] };
 
 // VERBATIM from the live AIO careers page (doc 11779). No locations, no TX content.
+// "Unlicensed Inspectors" links out to A-Train Academy (per Josh, SI TX + AIO).
 const DEPARTMENTS: Department[] = [
-  { name: "Inspectors", roles: ["Licensed Inspectors", "Unlicensed Inspectors"] },
-  { name: "Client Care Center", roles: ["Client Care Specialist"] },
-  { name: "Marketing", roles: ["Business Development Representative"] },
-  { name: "Environmental", roles: ["Environmental Technician"] },
+  {
+    name: "Inspectors",
+    roles: [{ name: "Licensed Inspectors" }, { name: "Unlicensed Inspectors", href: "https://atrainacademy.com" }],
+  },
+  { name: "Client Care Center", roles: [{ name: "Client Care Specialist" }] },
+  { name: "Marketing", roles: [{ name: "Business Development Representative" }] },
+  { name: "Environmental", roles: [{ name: "Environmental Technician" }] },
 ];
 
 export function CareersOpenings() {
@@ -51,10 +56,21 @@ export function CareersOpenings() {
                 <ul className="mt-3 flex flex-col gap-2.5">
                   {dept.roles.map((role) => (
                     <li
-                      key={role}
+                      key={role.name}
                       className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 font-display text-[15px] leading-snug text-brand-text"
                     >
-                      <span>{role}</span>
+                      {role.href ? (
+                        <a
+                          href={role.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-semibold text-brand-purple hover:underline"
+                        >
+                          {role.name}
+                        </a>
+                      ) : (
+                        <span>{role.name}</span>
+                      )}
                     </li>
                   ))}
                 </ul>
