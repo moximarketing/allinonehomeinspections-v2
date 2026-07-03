@@ -18,13 +18,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...allSlugs().map((slug) => ({
-      url: `${brand.siteUrl}/${slug}/`,
+      url: `${brand.siteUrl}/${slug}`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
     ...POSTS.map((p) => ({
-      url: `${brand.siteUrl}/${p.slug}/`,
+      url: `${brand.siteUrl}/${p.slug}`,
       lastModified: new Date(p.modified || p.date),
       changeFrequency: "yearly" as const,
       priority: 0.6,

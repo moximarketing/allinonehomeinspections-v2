@@ -46,7 +46,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const url = `${brand.siteUrl}/${slug}/`;
+  const url = `${brand.siteUrl}/${slug}`;
   // Blog posts: use each post's LIVE Rank Math title/description (spec/page-meta.json)
   if (!getPageBySlug(slug)) {
     const post = getPostBySlug(slug);
@@ -107,7 +107,7 @@ export default async function ElementorPage({
       {jsonLd(
         breadcrumbSchema([
           { label: "Home", href: "/" },
-          { label: titleFromMeta(slug), href: `/${slug}/` },
+          { label: titleFromMeta(slug), href: `/${slug}` },
         ])
       )}
       {page.elements.map((el, i) => (
@@ -118,7 +118,7 @@ export default async function ElementorPage({
             i === 0
               ? injectBreadcrumb(el, [
                   { label: "Home", href: "/" },
-                  { label: titleFromMeta(slug), href: `/${slug}/` },
+                  { label: titleFromMeta(slug), href: `/${slug}` },
                 ])
               : el
           }

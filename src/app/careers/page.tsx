@@ -16,7 +16,7 @@ import { brand } from "../../../brand.config";
 
 const SLUG = "careers";
 const m = getMeta(SLUG);
-const URL = `${brand.siteUrl}/${SLUG}/`;
+const URL = `${brand.siteUrl}/${SLUG}`;
 
 export const metadata: Metadata = {
   title: { absolute: m.title },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function CareersPage() {
   return (
     <>
-      {jsonLd(breadcrumbSchema([{ label: "Home", href: "/" }, { label: "Careers", href: URL }]))}
+      {jsonLd(breadcrumbSchema([{ label: "Home", href: "/" }, { label: "Careers", href: `/${SLUG}` }]))}
 
       <PageHero title="Join Our Team" breadcrumbs={[{ label: "Home", href: "/" }, { label: "Careers" }]} />
 

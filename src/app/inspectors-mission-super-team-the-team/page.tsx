@@ -20,7 +20,7 @@ import { brand } from "../../../brand.config";
 
 const SLUG = "inspectors-mission-super-team-the-team";
 const m = getMeta(SLUG);
-const URL = `${brand.siteUrl}/${SLUG}/`;
+const URL = `${brand.siteUrl}/${SLUG}`;
 
 export const metadata: Metadata = {
   title: { absolute: m.title },
@@ -116,7 +116,7 @@ function Group({ heading, members }: { heading: string; members: Member[] }) {
 export default function TeamPage() {
   return (
     <>
-      {jsonLd(breadcrumbSchema([{ label: "Home", href: "/" }, { label: "Our Team", href: URL }]))}
+      {jsonLd(breadcrumbSchema([{ label: "Home", href: "/" }, { label: "Our Team", href: `/${SLUG}` }]))}
 
       <PageHero title="Meet The Team" breadcrumbs={[{ label: "Home", href: "/" }, { label: "Our Team" }]} />
 

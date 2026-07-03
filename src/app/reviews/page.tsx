@@ -20,7 +20,7 @@ import { brand } from "../../../brand.config";
 
 const SLUG = "reviews";
 const m = getMeta(SLUG);
-const URL = `${brand.siteUrl}/${SLUG}/`;
+const URL = `${brand.siteUrl}/${SLUG}`;
 const PHONE_TEL = "tel:13013736430";
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 export default function ReviewsPage() {
   const trail = [
     { label: "Home", href: "/" },
-    { label: "Reviews", href: `/${SLUG}/` },
+    { label: "Reviews", href: `/${SLUG}` },
   ];
 
   return (

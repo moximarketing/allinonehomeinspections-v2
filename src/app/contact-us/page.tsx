@@ -17,7 +17,7 @@ import { brand } from "../../../brand.config";
 
 const SLUG = "contact-us";
 const m = getMeta(SLUG);
-const URL = `${brand.siteUrl}/${SLUG}/`;
+const URL = `${brand.siteUrl}/${SLUG}`;
 const PHONE_TEL = "tel:13013736430";
 
 export const metadata: Metadata = {
@@ -37,7 +37,7 @@ const DETAILS = [
 export default function ContactPage() {
   const trail = [
     { label: "Home", href: "/" },
-    { label: "Contact Us", href: `/${SLUG}/` },
+    { label: "Contact Us", href: `/${SLUG}` },
   ];
 
   return (

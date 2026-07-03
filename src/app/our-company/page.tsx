@@ -21,7 +21,7 @@ import { brand } from "../../../brand.config";
 
 const SLUG = "our-company";
 const m = getMeta(SLUG);
-const URL = `${brand.siteUrl}/${SLUG}/`;
+const URL = `${brand.siteUrl}/${SLUG}`;
 const CRUMB = "Our Company";
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ export default function OurCompanyPage() {
   const faqs = collectFaqs(page.elements);
   const trail = [
     { label: "Home", href: "/" },
-    { label: CRUMB, href: `/${SLUG}/` },
+    { label: CRUMB, href: `/${SLUG}` },
   ];
 
   return (

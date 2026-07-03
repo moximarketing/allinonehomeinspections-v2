@@ -22,7 +22,7 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
       {jsonLd(
         breadcrumbSchema([
           { label: "Home", href: "/" },
-          { label: post.title.replace(/<[^>]+>/g, ""), href: `/${post.slug}/` },
+          { label: post.title.replace(/<[^>]+>/g, ""), href: `/${post.slug}` },
         ])
       )}
       {jsonLd({
@@ -32,7 +32,7 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
         datePublished: post.date,
         dateModified: post.modified,
         image: img ? `${brand.siteUrl}${img}` : undefined,
-        url: `${brand.siteUrl}/${post.slug}/`,
+        url: `${brand.siteUrl}/${post.slug}`,
         author: { "@type": "Organization", name: brand.name },
         publisher: { "@type": "Organization", name: brand.name },
       })}
