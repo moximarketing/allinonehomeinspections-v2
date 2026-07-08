@@ -28,3 +28,27 @@
 @media (max-width: 767px) {
   .si-map-wrap { width: 100% !important; }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   /utilities QA — feat/utilities-qa (Joel 2026-07-08). Layout only.
+   The ids below are UNIQUE to the utilities page (verified), so these global
+   rules cannot leak onto other pages. Hero + first-content-row edits (shared
+   ids) live in data.ts instead. !important beats the renderer's in-body <style>.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* First content ("Real People Who Make Your Move Easier") — the call-center
+   photo (injected next/image widget) renders as a rounded cover panel, image-
+   right beside the text. */
+.el-aio-util-photo { width: 100% !important; } /* fill the 50% column (parent centers items) */
+.el-aio-util-photo img {
+  width: 100% !important;
+  height: 420px !important;
+  object-fit: cover;
+  border-radius: 16px !important;
+}
+@media (max-width: 1024px) { .el-aio-util-photo img { height: 340px !important; } }
+@media (max-width: 767px)  { .el-aio-util-photo img { height: 300px !important; } }
+
+/* "Need Help Getting Set Up?" — center the white form card within its section
+   (it was pinned left at ~65% width, leaving dead space on the right). */
+.el-6775f3ae { margin-left: auto !important; margin-right: auto !important; }
