@@ -86,10 +86,14 @@ function removeElement(page: PageData, id: string) {
 const utilTransformed = new Set<string>();
 function transformUtilities(page: PageData) {
   // ── Hero: mirror the SI TX utilities hero (breadcrumb + single H1, no eyebrow /
-  //    no subhead), and adopt TX's tighter 400px min-height. The shorter, bottom-
-  //    aligned block drops the injected breadcrumb clear of the sticky nav.
+  //    no subhead). The hero is bottom-aligned (flex-end) with a min-height, so a
+  //    taller min-height buys TOP breathing room — dropping the injected breadcrumb
+  //    well clear of the sticky nav. Measured against the live TX hero
+  //    (yoursuperinspector.com/utilities): TX puts ~256px above the breadcrumb; at
+  //    500px min-height (with the kept 75px bottom padding) AIO lands ~254px, so the
+  //    hero has TX's breathing room instead of the compressed 400px it had before.
   const hero = findElement(page, "8abaaa2");
-  if (hero?.settings?.min_height?.size) hero.settings.min_height.size = 400;
+  if (hero?.settings?.min_height?.size) hero.settings.min_height.size = 500;
   removeElement(page, "9f3958c"); // eyebrow pill "AIO's Home Services Team"
   removeElement(page, "de36b35"); // subhead "Helping homebuyers across DC…"
   const h1 = findElement(page, "130a783");
