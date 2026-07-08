@@ -253,3 +253,20 @@ is utilities-only across the whole site (home's icon-boxes are `stacked` and ren
 native component, 0 `NativeIconBox` spans in home output) → no other page affected.
 
 Not merged/pushed — awaiting Joel's review.
+
+### Deploy + hero-spacing follow-up (2026-07-08, later)
+
+- **Deployed:** `feat/utilities-qa` committed → merged to `main` (`--no-ff`) → pushed. As with
+  SI TX / SI LV, the git-push production build did **not** auto-alias the custom domain — it
+  stayed on the old deployment until a manual `vercel promote <new-deploy> --scope
+  moxi-marketing`. After promoting, allinonehomeinspections.com/utilities verified live with all
+  fixes (hero, photo, secure, form, red-disc icons). **Cadence note for these Moxi sites: a git
+  push does not move the domain alias — always `vercel promote` (or check the alias) after push.**
+- **Hero vertical spacing corrected:** the first pass set the hero `min_height` to 400px, taken
+  from the Elementor-*rebuild* extract — but the true reference is the live hand-built TX hero
+  (yoursuperinspector.com/utilities), which is **464px** with ~256px above the breadcrumb. 400px
+  left AIO compressed (only ~154px above the breadcrumb). Raised `min_height` 400 → **500px**
+  (hero is flex-end aligned, so the extra height becomes top breathing room). Measured result:
+  hero-top→breadcrumb **254px** (TX 256), breadcrumb→H1 19px (TX 24), bottom padding kept at
+  75px — breadcrumb now clears the nav with TX's rhythm. Layout only; no copy touched; only the
+  hero container's min-height changed. Awaiting Joel's side-by-side review before push.
