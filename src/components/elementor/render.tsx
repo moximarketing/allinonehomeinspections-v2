@@ -848,9 +848,22 @@ function NativeIconBox({ el }: { el: ElementorElement }) {
     if (r) extra += dev === "" ? r : `${MEDIA_Q[dev]}{${r}}`;
   }
   const stacked = s.view === "stacked";
+  // "framed" view (utilities "What We Help You Set Up" cards): Elementor renders it
+  // as a filled disc too, but SWAPS the color roles vs stacked — disc fill is
+  // secondary_color, glyph is primary_color. Without this branch a framed icon fell
+  // through to a transparent disc + primary(white) glyph = invisible white-on-white
+  // (the AIO /utilities bug). Handling it yields the red disc + white glyph live
+  // shows. ADDITIVE — stacked/default/inline paths are unchanged; framed is
+  // utilities-only (verified: no other AIO page uses view:"framed"). Mirrors the
+  // SI LV render-layer fix.
+  const framed = s.view === "framed";
   const inline = String(s.position || "").startsWith("inline") || s.position === "left";
   const iconSize = dim(s.icon_size) || "25px";
   const TitleTag = (s.title_size || "h3") as keyof React.JSX.IntrinsicElements;
+  // framed discs sit in a stretch-default flex column — pin to the card's text
+  // alignment so the round disc doesn't blow out into a full-width ellipse.
+  const framedAlignSelf =
+    s.text_align === "center" ? "center" : s.text_align === "right" ? "flex-end" : "flex-start";
   const iconNode = s.selected_icon && (
     <span
       className="elementor-icon-box-icon"
@@ -859,10 +872,19 @@ function NativeIconBox({ el }: { el: ElementorElement }) {
         alignItems: "center",
         justifyContent: "center",
         flexShrink: 0,
+        alignSelf: framed && !inline ? framedAlignSelf : undefined,
         padding: dim(s.icon_padding) || 9,
-        borderRadius: stacked ? "50%" : undefined,
-        backgroundColor: stacked ? color(s, "primary_color") || "#75140C" : undefined,
-        color: stacked ? color(s, "secondary_color") || "#FFFFFF" : color(s, "primary_color") || "#75140C",
+        borderRadius: stacked || framed ? "50%" : undefined,
+        backgroundColor: stacked
+          ? color(s, "primary_color") || "#75140C"
+          : framed
+          ? color(s, "secondary_color") || "#75140C"
+          : undefined,
+        color: stacked
+          ? color(s, "secondary_color") || "#FFFFFF"
+          : framed
+          ? color(s, "primary_color") || "#FFFFFF"
+          : color(s, "primary_color") || "#75140C",
       }}
     >
       <IconGlyph icon={s.selected_icon} className="" style={{ width: iconSize, height: iconSize }} />

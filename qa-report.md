@@ -163,3 +163,93 @@ extraction). Content verbatim from live; flag-don't-fix on live content bugs (pa
 ## 2026-06-20 — Vercel Git connection verified
 
 Git push-to-deploy connected (live `allinonehomeinspections` project → moximarketing/allinonehomeinspections-v2 `main`). This line is a harmless end-to-end deploy test.
+
+## 2026-07-08 — /utilities QA (branch `feat/utilities-qa`)
+
+Layout/CSS only, save for the one approved hero H1 copy edit. `/utilities` is page 14627
+through the generic renderer. Because the hero and first-content-row element ids
+(`8abaaa2`, `130a783`, `2e056a3`, `d468e4f`, `db77b24`) are SHARED across 8–9 pages, those
+edits are made in a page-scoped transform on the utilities page's own element objects
+(`transformUtilities` in `src/lib/elementor/data.ts`, same pattern as the cookie-policy
+`stripHeroPhoto`) — never global `.el-id` CSS, which would leak. The secure-card and form-card
+ids are UNIQUE to utilities, so those are handled in `src/app/si-utilities.css`.
+
+### Done
+
+1. **Hero restructured to mirror SI TX** (`transformUtilities`): removed the eyebrow pill
+   (`9f3958c` "AIO's Home Services Team") and the subhead (`de36b35` "Helping homebuyers
+   across DC, Maryland & Virginia…"); set the H1 (`130a783`) to **"AIO's Home Services Team"**
+   (the one approved copy change); tightened hero `min_height` 475 → **400px** to match TX.
+   The shorter, bottom-aligned block drops the injected "Home / Utilities" breadcrumb clear of
+   the sticky nav — **fixes the breadcrumb clipping**. Exactly one H1 remains.
+2. **First content ("Real People Who Make Your Move Easier") → text-left / image-right.** The
+   right column (`db77b24`) pointed at `Texas-Home-Inspections-in-Austin-TX.webp`, which was
+   never downloaded (confirmed 404 in dev logs) → column rendered empty. Dropped the broken
+   background and injected a real **next/image** panel using the SI TX call-center photo
+   (`/public/images/call-center.webp`, copied from the read-only super-inspector-v2 source —
+   the live sites 403 hotlinks). Styled as a rounded cover panel via the unique
+   `.el-aio-util-photo` class (420 / 340 / 300px per breakpoint). Stacks full-width below the
+   text on phones (`flex_direction_mobile: column`, `width_mobile: 100%`, existing `order:99`).
+3. **"Secure Handling, Then Deleted" — white card removed** (`5d6d62ec`, including the
+   "Encrypted intake · used once · never stored" line). Remaining text column centered on the
+   rail and constrained to a 720px reading width, center-justified (eyebrow + heading +
+   paragraphs), full-rail section.
+4. **"Need Help Getting Set Up?" form card centered** within its section (`.el-6775f3ae`
+   margin auto) — was pinned left at ~65% width with dead space on the right.
+
+### Verified
+
+- **Build clean** (`npm run build`, 29 pages, no type/lint errors).
+- **City/State are NOT defaulting to "TX"** — render empty `Enter City` / `Enter State`
+  placeholders (SI LV bug not present here). Confirmed visually + in `stub-form` (select
+  `defaultValue=""`).
+- **Zero cross-site leakage in the rendered output** — visible text and raw HTML both scanned:
+  no "Super Inspector / Texas / Houston / Dallas / Vegas / Nevada / Austin". Only asset ref is
+  `call-center.webp` (neutral filename) served through `/_next/image`.
+- **Other pages untouched** — shared-id pages verified: `inspectors-mission-super-team` still
+  renders its own hero + its own `db77b24` background image; home hero H1 unchanged. The
+  transform mutates only the utilities page object; the two utilities-only CSS classes are
+  unique.
+- Dev-server review pass on the hero + all four sections at desktop; mobile stacking verified
+  via emitted media-query CSS.
+
+### Flagged (pre-existing, not touched — parity policy)
+
+- **F-UTIL-1 — dead cross-site email config on the utilities form** (`1e9e6424`): Elementor's
+  native `email_subject` / `email_from_name` (and `_2`) still say *"Super Inspector Texas |
+  Home Inspection Company"*. **Not used and not rendered** — AIO forms submit to
+  `/api/schedule`+`/api/contact` → `lead.ts`, not Elementor email, and `form_name` is the
+  generic "New Form". No visible or functional leak, but worth scrubbing from the source
+  extract at some point. Left as-is (parity).
+- The raw `spec/all-pages-elementor-data.json` still carries the old broken
+  `Texas-Home-Inspections-in-Austin-TX.webp` bg ref on `db77b24`; the runtime transform
+  strips it, so it never reaches the DOM. Left in the extract for parity.
+
+### Follow-up — invisible "What We Help You Set Up" card icons (render-layer fix)
+
+**Symptom:** the four cards in the "What We Help You Set Up" section (Internet, Live TV, Home
+Security, Utility Info & Vendors) showed no icon — blank space where a red badge should be.
+
+**Root cause diagnosed (NOT the SI TX cause):** these are core Elementor `icon-box` widgets
+(`NativeIconBox`) with **ekiticons** glyphs (`icon-wifi` / `icon-monitor` / `icon-shield`) — no
+Font Awesome involved — set to Elementor's **`view: "framed"`** with `primary_color` = white
+(glyph) and `secondary_color` = `#75140C` (brand red, the disc fill). The glyph WAS rendering
+(confirmed the real wifi SVG path in the DOM) but at `color:#FFFFFF` with **no disc** — the
+renderer only drew a background disc for `view: "stacked"`, so a framed icon was a white glyph
+on a white card = invisible. This is the **SI LV** bug, not the SI TX `fas fa-bolt` FA-glyph
+bug. AIO /utilities has **zero** Font Awesome icons / no fa-bolt / no "Electricity" card, so
+adding `fa-bolt` to `FA_ICONS` would have been dead code — deliberately **not** done.
+
+**Fix (additive, mirrors SI LV):** added a `framed` branch to `NativeIconBox`
+(`src/components/elementor/render.tsx`) — for `view: "framed"`, fill the disc with
+`secondary_color` and draw the glyph in `primary_color` (with `border-radius:50%` and an
+`align-self` pin so the disc doesn't stretch into an ellipse in a stretch-default flex column).
+The `stacked` / `default` / `inline` paths are byte-for-byte unchanged (verified: for `stacked`
+the ternaries resolve identically and no `align-self` is added).
+
+**Verified:** all four cards now render a **red disc + white glyph** (matching live);
+`npm run build` clean (29 pages); `FA_ICONS` untouched (`fa-bolt` count = 0); `view: "framed"`
+is utilities-only across the whole site (home's icon-boxes are `stacked` and render via a
+native component, 0 `NativeIconBox` spans in home output) → no other page affected.
+
+Not merged/pushed — awaiting Joel's review.
