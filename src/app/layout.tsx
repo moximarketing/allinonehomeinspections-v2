@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import "./globals.css";
 import "./si-utilities.css";
 import { brand } from "../../brand.config";
@@ -21,6 +22,13 @@ const bricolage = Bricolage_Grotesque({
 // Google tag — SAME tag as live (GT-KVMWHPV, verified in live source 2026-06-12).
 // Reusing it = zero analytics gap at cutover. Hardcoded per Moxi standard.
 const GA_MEASUREMENT_ID = "GT-KVMWHPV";
+
+// Google Ads conversion tag for the ACTIVE Ads account:
+// "All In One Home Inspection (2026)", customer ID 643-043-9521, conv ID AW-18272721926.
+// Loaded as a second destination on the SAME gtag.js that <GoogleAnalytics> already loads
+// (no second gtag.js request) so the spending Ads account starts receiving data.
+// GT-KVMWHPV is left untouched — separate keep-vs-remove decision. Hardcoded per Moxi standard.
+const GOOGLE_ADS_TAG_ID = "GT-W6JTQ33C";
 
 export const metadata: Metadata = {
   metadataBase: new URL(brand.siteUrl),
@@ -76,6 +84,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AccessibilityWidget />
         </MotionConfigProvider>
         <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
+        {/* Second gtag config destination → activates the Google Ads account. Reuses the
+            gtag.js loaded above; only adds a config() call to the shared dataLayer. */}
+        <Script id="google-ads-gtag" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('config','${GOOGLE_ADS_TAG_ID}');`}
+        </Script>
       </body>
     </html>
   );
