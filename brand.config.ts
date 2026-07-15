@@ -112,7 +112,7 @@ export const brand = {
     addOns: [
       "Sewer Camera Inspection: $250.00",
       "Repair Cost Estimation: $100.00",
-      "Septic Inspection: $250.00",
+      "Septic Inspection: $400.00",
       "Pool Inspection: $150.00",
       "Water Quality Test (Bacteria & Total Coliforms): $75.00",
       "Water Quality Test (Bacteria, Total Coliforms, Lead & Nitrate): $225.00",
