@@ -9,6 +9,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { trackLeadConversion } from "@/lib/analytics";
 
 const FIELD =
   "block w-full h-12 rounded-md border border-gray-300 bg-white px-4 font-display text-base text-black placeholder:text-black/40 focus:outline-none focus:ring-2 focus:ring-brand-red focus:border-brand-red transition-colors duration-300";
@@ -24,17 +25,23 @@ export function ContactForm() {
       return;
     }
     setBusy(true);
+    // Only a server-confirmed, non-bot lead fires the conversion (honeypot bots
+    // come back mode:"dropped"). Thank-you shows regardless so UX never regresses.
+    let realLead = false;
     try {
       const data = Object.fromEntries(new FormData(e.currentTarget).entries());
-      await fetch("/api/contact", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ form: "AIO Contact Form", ...data }),
       });
+      const json = await res.json().catch(() => null);
+      realLead = res.ok && json?.ok === true && json.mode !== "dropped";
     } catch {
       /* stub mode: still show success UX; payload logged server-side when reachable */
     }
     setBusy(false);
+    if (realLead) trackLeadConversion("AIO Contact Form");
     setDone(true);
   }
 

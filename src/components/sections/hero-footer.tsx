@@ -22,6 +22,7 @@ import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Calendar } from "lucide-react";
 import { Reveal } from "@/components/site/reveal";
+import { trackLeadConversion } from "@/lib/analytics";
 import { brand } from "../../../brand.config";
 
 const P = brand.pricing;
@@ -142,8 +143,12 @@ export function HeroFooter({
     }
     setSubmitting(true);
     const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    // Only a server-confirmed, non-bot lead fires the conversion (honeypot bots
+    // come back mode:"dropped"). The thank-you state still shows regardless so
+    // UX never regresses on a transient network error.
+    let realLead = false;
     try {
-      await fetch("/api/schedule", {
+      const res = await fetch("/api/schedule", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -156,10 +161,13 @@ export function HeroFooter({
           total: formatted,
         }),
       });
+      const json = await res.json().catch(() => null);
+      realLead = res.ok && json?.ok === true && json.mode !== "dropped";
     } catch {
       /* stub mode: still show success UX; payload logged server-side when reachable */
     }
     setSubmitting(false);
+    if (realLead) trackLeadConversion("AIO Schedule Inspection Form");
     setSubmitted(true);
   }
 
