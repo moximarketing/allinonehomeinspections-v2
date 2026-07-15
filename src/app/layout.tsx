@@ -89,6 +89,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="google-ads-gtag" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('config','${GOOGLE_ADS_TAG_ID}');`}
         </Script>
+        {/* CallRail dynamic number insertion (swap.js) — company "All In One Home
+            Inspections - Moxi" (COM019f671c5fe379bbafe438542ac05eaf, account
+            462490783). Sitewide DNI: swaps the (301) 373-6430 line for a session
+            tracking number so paid/organic calls are attributed. Inert until the
+            company's website pool is active (no redeploy needed once it is). */}
+        <Script
+          id="callrail-swap"
+          src="//cdn.callrail.com/companies/947798439/e7a5183706e6ff8d209b/12/swap.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
