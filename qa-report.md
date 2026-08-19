@@ -270,3 +270,70 @@ Not merged/pushed — awaiting Joel's review.
   hero-top→breadcrumb **254px** (TX 256), breadcrumb→H1 19px (TX 24), bottom padding kept at
   75px — breadcrumb now clears the nav with TX's rhythm. Layout only; no copy touched; only the
   hero container's min-height changed. Awaiting Joel's side-by-side review before push.
+
+## 2026-08-19 — Calculator base price $449 → $499 (branch `pricing-base-2026-08-19`)
+
+### Done
+
+- **`brand.config.ts:102` — `pricing.base` 449 → 499.** This is the single source of truth: the
+  calculator reads it via `const P = brand.pricing` (`src/components/sections/hero-footer.tsx:28`)
+  and computes at line 69 as
+  `sqft <= P.sqftThreshold ? P.base : P.base + (sqft - P.sqftThreshold) * P.perSqftOver`.
+  **Base only.** `sqftThreshold` (2000), `perSqftOver` (0.16), `olderHomeSurcharge` (50),
+  `pierAndBeamSurcharge` (100), the slider bounds (500–6000, step 50, default 2000) and **all
+  seven add-on prices** are unchanged. Total code diff: one line.
+- **`src/components/sections/hero-footer.tsx:10`** — file-header comment refreshed
+  `base $449` → `base $499`. Documentation of the constant changed; zero runtime effect.
+- **`public/llms.txt:24`** — `$449` → `$499`. Number only, line not reworded. This file is
+  **live-served at `/llms.txt`** and read by AI crawlers, so a stale price here is a public
+  wrong-price surface, not just an internal doc.
+- **`public/llms.txt:26`** — septic add-on `$250` → `$400`. **Pre-existing bug, not caused by
+  this change:** `ddaea69` (2026-07-15) raised the septic price in `brand.config.ts` but never
+  updated `llms.txt`, so the public file understated septic by $150 for 35 days. Line 26 contains
+  two `$250` tokens (sewer camera and septic) — the edit was anchored on `septic $250` so sewer
+  camera was untouched.
+- **`CLAUDE.md:19`** — calculator base `$449` → `$499`.
+
+### Verified
+
+- **Add-on audit, `llms.txt:26` vs `brand.pricing.addOns`, parsed token-by-token:** sewer camera
+  $250 ✓, repair cost estimation $100 ✓, **septic $250 ✗ → fixed to $400**, pool $150 ✓, water
+  quality (bacteria & total coliforms) $75 ✓, water quality (bacteria, total coliforms, lead &
+  nitrate) $225 ✓, mold $300 ✓. **Septic was the only drift.**
+- **The two "water quality" entries are NOT a copy-paste error** — they are a basic vs. extended
+  panel pair: `Water Quality Test (Bacteria & Total Coliforms)` $75 and `Water Quality Test
+  (Bacteria, Total Coliforms, Lead & Nitrate)` $225. Labels match `brand.config.ts` exactly.
+  Left alone deliberately.
+- **Calculator math on the deployed preview**, all three of 1280 / 1440 / 390 (1440 and 390 via a
+  same-origin iframe pinned to those CSS widths — `resize_window` is a no-op on a 1280-CSS-px
+  display): default 2,000 sqft → **$499**; 500 → $499; 1,200 → $499; 1,500 → $499; 3,000 →
+  **$659** (= 499 + 1,000 × 0.16); 4,500 → $899; 5,000 → $979; 6,000 → $1,139 (slider max).
+  The +$160 at 3,000 sqft is the proof the $0.16/sqft escalation is untouched — only the constant
+  it starts from moved.
+- **`tsc --noEmit` clean** (exit 0). No `next build` run locally; no dev server touched.
+- **Repo-wide `449` sweep after the fix:** zero live-served textual hits in `public/` or `src/`.
+  The ten remaining matches are all SVG/glyph path coordinates (`ekit-icons.tsx` lines 5, 9, 16,
+  21, 35, 37 and four `public/images/source/*.svg`). `spec/*` still contains the legacy WordPress
+  calculator at 449 and was **left byte-exact on purpose** — it is the read-only extraction and
+  the parity baseline, and it is dead code (`src/app/page.tsx` renders a native composition and
+  never reads the Elementor home data).
+
+### Flagged (not changed)
+
+- **CallRail DNI scope.** `67a33ee` installed `swap.js` in the one root `layout.tsx`, so the
+  script loads on **every** route (6 static + `[slug]` over 11 Elementor slugs + 6 blog posts;
+  confirmed live on `/our-company/`, `/careers/`, `/reviews/`, `/privacy-policy/`,
+  `/contact-us/`). There are no PPC landers to isolate it to. **But the number swap does not fire
+  on organic traffic:** the company's single tracker (`TRK019f673700c87166a3fa9b6b7740a5c6`,
+  "Website pool", session, active, 4 numbers) has `source = {"google": ["paid"]}`, so only
+  Google-Ads-attributed sessions get a pool number; organic/direct/referral see the house line
+  (301) 373-6430. Company identity confirmed correct — `masked_id` 947798439 matches the script
+  URL and the API name "All In One Home Inspections - Moxi" (checked deliberately: it is close to
+  947289090, a *disabled* Target Home Inspections company in the same account, but distinct).
+  Two things that *do* reach organic: `swap_cookie_duration` = **6 months** (a visitor who once
+  arrived via Ads keeps the tracking number across later organic visits — by design), and
+  `form_capture` = **true** (CallRail observes form submissions wherever `swap.js` loads).
+  `67a33ee`'s message says "inert until the pool is active" — that is now **stale**:
+  `dni_active` is `true`. Code unchanged and correct; only the commit message is out of date.
+- `qa-report.md`'s own earlier sections still quote $449 (2026-06-12 lines 34 and 96) as a record
+  of what the build was at that time. Left as historical record.
