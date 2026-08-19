@@ -7,7 +7,7 @@
  * so the form matches the family standard property-for-property.
  *
  * AIO re-skin (only these differ from SI LV):
- *   - Pricing = brand.config pricing (base $449; +$0.16/sqft over 2,000; >20yr +$50;
+ *   - Pricing = brand.config pricing (base $499; +$0.16/sqft over 2,000; >20yr +$50;
  *     Pier & Beam +$100; + checked add-on $; 7 AIO add-ons).
  *   - 3 AIO inspection types; State field has NO pre-fill (live AIO ships none).
  *   - "Real Estate Agent?" → AIO's live EXTERNAL agent scheduler (yoursuperinspector.com).

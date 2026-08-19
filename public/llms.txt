@@ -21,9 +21,9 @@
 
 ## Pricing
 
-- Standard inspection: $449 for homes up to 2,000 sqft; +$0.16/sqft above 2,000
+- Standard inspection: $499 for homes up to 2,000 sqft; +$0.16/sqft above 2,000
 - Homes over 20 years old: +$50 · Pier-and-beam foundation: +$100
-- Add-ons: sewer camera $250, repair cost estimation $100, septic $250, pool $150, water quality test (bacteria & total coliforms) $75, water quality test (bacteria, total coliforms, lead & nitrate) $225, mold inspection $300
+- Add-ons: sewer camera $250, repair cost estimation $100, septic $400, pool $150, water quality test (bacteria & total coliforms) $75, water quality test (bacteria, total coliforms, lead & nitrate) $225, mold inspection $300
 - Instant pricing calculator and online scheduling on the homepage
 
 ## Key pages
