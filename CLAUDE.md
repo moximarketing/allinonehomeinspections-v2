@@ -16,7 +16,7 @@ DB-clone of the Texas site with swapped content/colors, so structures match Texa
 - **Colors (kit 9555 live):** primary/purple-slot `#24333C`, red-slot `#75140C`,
   lava-slot `#98AAB7`. Tokens in `src/app/globals.css` @theme + `GLOBAL_COLORS` in
   `src/lib/elementor/data.ts` (token NAMES kept from Texas: brand-red, brand-purple, brand-lava).
-- **Calculator:** $449 base ≤2000 sqft, +$0.16/sqft over 2000; >20-yr home +$50; pier & beam +$100;
+- **Calculator:** $499 base ≤2000 sqft, +$0.16/sqft over 2000; >20-yr home +$50; pier & beam +$100;
   7 add-ons with prices. NO location field on this site (live script's Houston/DFW branches are dead).
   Source of truth: `spec/extracted/html-script-home-8cb13d0.txt` (verbatim live JS).
 
