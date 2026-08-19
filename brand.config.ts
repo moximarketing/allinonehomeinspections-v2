@@ -99,7 +99,7 @@ export const brand = {
   // shape so the canonical hero-footer can read from here. AIO has NO location field (live
   // Houston/DFW branches are dead) and ADDS a 7-item add-on list (price parsed from the label).
   pricing: {
-    base: 449,
+    base: 499,
     sqftThreshold: 2000,
     perSqftOver: 0.16,
     olderHomeSurcharge: 50,
