@@ -52,7 +52,7 @@ const INSPECTORS: Member[] = [
   { name: "Steven Flynn", role: "Inspector", license: "MREC License #31178", photo: "/images/team/steven.webp" },
   { name: "Jay Juron", role: "Inspector", photo: "/images/team/jay.webp" },
   { name: "Dan Deboodt", role: "Home Inspector", license: "MREC #35878", email: "dan@allinonehomeinspections.com", phone: "(405) 414-6712", photo: "/images/team/dan.webp" },
-  { name: "Justin Barrick", role: "Home Inspector", email: "jbarrick@allinonehomeinspections.com", phone: "(717) 679-1275", photo: "/images/team/justin.webp" },
+  { name: "Justin Barrick", role: "Home Inspector", license: "MREC #36275", email: "jbarrick@allinonehomeinspections.com", phone: "(717) 679-1275", photo: "/images/team/justin.webp" },
   { name: "Alex Rhynes", role: "Environmental Technician", email: "arhynes@allinonehomeinspections.com", phone: "(301) 633-5999", photo: "/images/team/alex.webp" },
 ];
 
