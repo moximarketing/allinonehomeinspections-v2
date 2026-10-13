@@ -31,6 +31,12 @@ export function CookieBanner() {
     }
   }, []);
 
+  // Mark <html> while the banner is on screen so the SDB promo card (globals.css .si-promo)
+  // holds back on phones instead of stacking on top of it.
+  useEffect(() => {
+    document.documentElement.classList.toggle("si-cookie-open", show);
+  }, [show]);
+
   function dismiss(choice: "accept" | "decline") {
     writeCookie(COOKIE_NAME, choice);
     setShow(false);

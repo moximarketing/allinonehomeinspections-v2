@@ -337,3 +337,35 @@ Not merged/pushed — awaiting Joel's review.
   `dni_active` is `true`. Code unchanged and correct; only the commit message is out of date.
 - `qa-report.md`'s own earlier sections still quote $449 (2026-06-12 lines 34 and 96) as a record
   of what the build was at that time. Left as historical record.
+
+## 2026-10-13 — SDB booking promo card (feat/sdb-promo-popup)
+
+Client-approved: $50 off an inspection, mention code SDB, Wed Oct 14 – Mon Oct 19, 2026; booking
+must be confirmed the same day the offer is provided, inspection can be a future date. Ported from
+the Super Inspector TX build (behavior + structure only; AIO brand, phone, tokens).
+
+**Build**
+- `src/lib/promo.ts` — window `[2026-10-14T00:00-04:00, 2026-10-20T00:00-04:00)` (America/New_York,
+  EDT, exact). Evaluated in the browser, never at build time.
+- `src/components/site/promo-banner.tsx` (mounted in layout) — 340px card bottom-right above the
+  a11y FAB (≥768); compact card clear of the FAB column (<768), held while the cookie banner is open.
+  Dismiss → sessionStorage for the visit. Not rendered on /lp/ or /go/ paths. Phone (301) 373-6430
+  from `brand.business.phone`; Book Now → `/#schedule` (HeroFooter scheduler).
+- `cookie-banner.tsx` now toggles `html.si-cookie-open` while open (only consumer: `.si-promo`).
+- `?promo=preview` shows it before Oct 14 only ("Preview — goes live Oct 14"); hidden after Oct 19
+  even with the override.
+
+**Verified (dev :3012, headless Chromium at exact 1440/1280/390)** — 13/13 Eastern-time boundary
+cases; preview visible at all three widths with zero overlap/overflow; hidden today without the
+override (1440 + 390) and with `?promo=1`; hidden on /lp/test; held at 390 while cookie banner open,
+appears after Accept; dismissal survives reload; browser clock at Oct 14 00:00:30 ET / Oct 19 23:59
+ET → live; Oct 20 00:00:30 ET → hidden with and without override; open tab across Oct 19→20
+midnight auto-hides.
+
+- ⚠️ FLAG: no promo-code field anywhere in AIO booking (scheduler has none; "How did you hear about
+  us?" is a fixed dropdown). Copy says "Mention code SDB when you book." Code is not captured in leads.
+- ⚠️ FLAG: no /promotions page exists on AIO — nothing to update.
+- ⚠️ FLAG (pre-existing): at 390 the open cookie banner (16→374px) runs under the a11y FAB
+  (310→366px). SI TX has a collision guard for this; AIO doesn't. Not touched.
+- ⚠️ FLAG (pre-existing): robots.ts disallows /lp/ with no AdsBot-Google allow block. No /lp/ pages
+  exist today, so harmless now — add the AdsBot block before any lander ships.
