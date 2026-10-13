@@ -9,6 +9,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/footer";
 import { CookieBanner } from "@/components/site/cookie-banner";
 import { AccessibilityWidget } from "@/components/site/accessibility-widget";
+import { PromoBanner } from "@/components/site/promo-banner";
 import { MotionConfigProvider } from "@/components/site/motion-config-provider";
 import { jsonLd, organizationSchema, websiteSchema, localBusinessSchema } from "@/lib/schema";
 
@@ -80,6 +81,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SiteHeader />
           <main id="main">{children}</main>
           <SiteFooter />
+          {/* SDB promo — self-gating to Oct 14–19, 2026 (America/New_York); see src/lib/promo.ts */}
+          <PromoBanner />
           <CookieBanner />
           <AccessibilityWidget />
         </MotionConfigProvider>
