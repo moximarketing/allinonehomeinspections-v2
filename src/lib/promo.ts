@@ -3,27 +3,27 @@
  *
  * Offer facts — use exactly as given, do not reword the terms:
  *   - $50 off an inspection, promo code SDB
- *   - Runs Wednesday, October 14 through Monday, October 19, 2026
+ *   - Runs Wednesday, October 14 through Monday, October 26, 2026 (extended from Oct 19 at the client's request, 2026-10-19)
  *   - The booking must be confirmed the same day the offer is provided; the inspection
  *     itself can be on a future date.
  *   - Discount is applied at booking by the team. Calculator prices are NOT changed.
  *
- * Window: Oct 14 00:00 → Oct 19 23:59:59 America/New_York. Both dates fall inside EDT
+ * Window: Oct 14 00:00 → Oct 26 23:59:59 America/New_York. Both dates fall inside EDT
  * (DST ends Nov 1, 2026), so the offset is a fixed -04:00 and these instants are exact.
- * END is exclusive: the card is gone from 2026-10-20T00:00 Eastern.
+ * END is exclusive: the card is gone from 2026-10-27T00:00 Eastern.
  *
  * The check runs in the browser against the visitor's clock, never at build/render time —
  * pages are statically cached, so a server-side check would freeze at deploy time and the
  * card would never appear (or never leave) without a redeploy.
  */
 export const PROMO_START = Date.parse("2026-10-14T00:00:00-04:00");
-export const PROMO_END = Date.parse("2026-10-20T00:00:00-04:00");
+export const PROMO_END = Date.parse("2026-10-27T00:00:00-04:00");
 
 export const PROMO_CODE = "SDB";
 
 export const PROMO_HEADLINE = "$50 off your inspection";
 export const PROMO_FINE_PRINT =
-  "Offer ends Monday, October 19, 2026. Booking must be confirmed the same day the offer is provided; the inspection itself can be on a future date.";
+  "Offer ends Monday, October 26, 2026. Booking must be confirmed the same day the offer is provided; the inspection itself can be on a future date.";
 
 /** Query value that shows the card before the start date, for review. */
 export const PROMO_PREVIEW_PARAM = "promo";

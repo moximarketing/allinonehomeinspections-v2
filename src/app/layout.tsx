@@ -81,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SiteHeader />
           <main id="main">{children}</main>
           <SiteFooter />
-          {/* SDB promo — self-gating to Oct 14–19, 2026 (America/New_York); see src/lib/promo.ts */}
+          {/* SDB promo — self-gating to Oct 14–26, 2026 (America/New_York); see src/lib/promo.ts */}
           <PromoBanner />
           <CookieBanner />
           <AccessibilityWidget />
