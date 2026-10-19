@@ -71,7 +71,7 @@ export function PromoBanner() {
     return () => clearTimeout(t);
   }, [isLander]);
 
-  // Auto-hide at the end of the window for a tab left open across midnight Oct 19.
+  // Auto-hide at the end of the window for a tab left open across midnight Oct 26.
   useEffect(() => {
     if (state !== "live") return;
     const id = setInterval(() => {
