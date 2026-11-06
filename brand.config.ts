@@ -101,7 +101,7 @@ export const brand = {
   pricing: {
     base: 499,
     sqftThreshold: 2000,
-    perSqftOver: 0.16,
+    perSqftOver: 0.18,
     olderHomeSurcharge: 50,
     olderHomeYears: 20,
     pierAndBeamSurcharge: 100,
