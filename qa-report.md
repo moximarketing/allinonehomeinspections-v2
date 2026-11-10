@@ -369,3 +369,25 @@ midnight auto-hides.
   (310→366px). SI TX has a collision guard for this; AIO doesn't. Not touched.
 - ⚠️ FLAG (pre-existing): robots.ts disallows /lp/ with no AdsBot-Google allow block. No /lp/ pages
   exist today, so harmless now — add the AdsBot block before any lander ships.
+
+## 2026-11-10 — Pricing: Repair Cost Estimation add-on $100 → $60
+
+Client request. Branch `rce-60` (`1d150dc`) → merged to main `666abbb` → `vercel --prod` →
+production `dpl_JAXDkyqYmqKvLrgWwULfgVVDVPAV` (allinonehomeinspections-j1d3npzwb), deployed from
+a clean checkout of main.
+
+**Changed**
+- `brand.config.ts` `pricing.addOns` — "Repair Cost Estimation: $100.00" → "$60.00". This is the
+  shared config the calculator reads (label + total parsed from it); the same label string goes to
+  the lead email and the Sheets row. No scheduler integration or service ID depends on it.
+- `public/llms.txt` — repair cost estimation $100 → $60 (number only).
+
+**Verified** (headless Chromium, exact 1440 / 1280 / 390; preview, then allinonehomeinspections.com;
+apex + www aliases confirmed on the new deployment via the Vercel API)
+- Add-on reads "Repair Cost Estimation: $60.00"; checking it moves Total $499 → $559 (2,000 sqft)
+  and unchecking returns it. 3/3 widths pass. Step 2 never submitted, so no test lead was sent.
+- No other visible repair-cost price on the live homepage.
+
+**Flags**
+- Archival live-WordPress snapshots (`spec/all-pages-elementor-data.json`,
+  `spec/extracted/*`) still show $100; they are not rendered. Left as-is.
