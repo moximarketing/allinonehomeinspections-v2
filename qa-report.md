@@ -391,3 +391,51 @@ apex + www aliases confirmed on the new deployment via the Vercel API)
 **Flags**
 - Archival live-WordPress snapshots (`spec/all-pages-elementor-data.json`,
   `spec/extracted/*`) still show $100; they are not rendered. Left as-is.
+
+## 2026-11-11 — Remove Dan Deboodt; hero technician → SI technician with AIO chest logo
+
+Client (Josh Musser, Super Home Services): Dan Deboodt was let go. Branch `remove-dan-hero-swap`.
+
+**Dan removed**
+- `inspectors-mission-super-team-the-team/page.tsx`: his INSPECTORS card (name, MREC #35878,
+  dan@ email, (405) 414-6712) and `public/images/team/dan.webp`.
+- He had no bio route, no Person schema, no sitemap entry and no other text reference, so no 301.
+- Certified Inspectors is now 5 cards → the group renders with `centerLastRow` (flex-wrap, widths
+  reproduce the 1/2/4-col grid + gaps) so the lone 5th card centers instead of orphaning left.
+- Hero cutout `public/images/hero-inspector.webp` was Dan → deleted, and the unrendered
+  Elementor-era copy `public/images/source/new-backgroundless-image-6.png` (also Dan) deleted.
+
+**Hero technician**
+- New `public/images/hero-inspector-aio.webp` = SI `new-backgroundless-image-2.webp` with ONLY the
+  chest logo changed (S + ® → All In One, red roof / white swoosh + "IN" / red "ALL" "ONE").
+  Made by ChatGPT editing the original pixels (attempt 2; attempt 1 regenerated the man and was
+  rejected). Verified: only a 100×76px chest box differs from the SI original; alpha identical.
+- Alpha cleanup: body alpha 248–254 (lossy-WebP artifact in the SI source) snapped to 255; 318
+  near-white edge pixels at mean alpha ~8 zeroed. Corners/edges alpha 0; checked over dark + white.
+- Canvas 1271×1920, pad L378/T127/R130/B0 = SI file, so the hero's existing 47px right-pad anchor
+  (measured for that file) and the mobile crop need no change. No hero sizing values changed.
+- Alt stays `alt=""` — both hero slots are decorative and `aria-hidden` (same as SI).
+
+**Also (standing rule)**: `globals.css` gained the Tailwind v4 `@source not` doc exclusions.
+Generated-class diff: only `invert` and `isolate` dropped, both doc-only (playbook / this report).
+
+**Verified on preview** `allinonehomeinspections-3d6w44s0l` (commit `773d5a0`), headless Chromium at
+exact 1440×900 / 1280×800 / 390×844 (mobile, DPR 2). Artifacts: `~/moxi-inbox/aio-hero/verify/`.
+- Home + team: HTTP 200, zero console errors, zero ≥400 responses, zero broken images, no
+  horizontal scroll, at all three widths.
+- Hero: painted body rect overlaps none of the hero h1/p/links (computed from the object-contain /
+  object-cover geometry); head 245–255px below hero top on desktop; no halo on the house photo.
+  Mobile: waist-up crop under the trust row, sits on the quote card.
+- Team: Certified Inspectors = 5 cards; 5th card centered on the rail at 1440/1280 (563+314/2 =
+  720 = rail center at 1440); single column at 390.
+- All 17 sitemap URLs: 200 and rendered HTML free of "Deboodt" / "dan@allinone" / "dan.webp" /
+  "35878" / the word "Dan". `/images/team/dan.webp` and `/images/hero-inspector.webp` → 404.
+
+**Flags**
+- Chest logo renders ~35 CSS px wide on desktop / ~16px on mobile (same scale the S logo had):
+  reads as the AIO mark (white swoosh + red roof + white "IN"), but the brand-red #75140C "ALL" /
+  "ONE" are low-contrast on navy at that size. Option: brighten the red inside the logo box only.
+- Hero `alt` left empty: both technician slots are decorative + `aria-hidden` (SI does the same).
+- Pre-existing, not touched: cookie banner at 390 sits under the a11y FAB (Decline button is
+  partly covered); 390 trust row wraps to narrow 3-line columns; Leadership (6) still leaves a
+  2-card second row left-aligned at 1440/1280.

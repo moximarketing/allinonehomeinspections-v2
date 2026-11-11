@@ -19,7 +19,12 @@ import { Reveal } from "@/components/site/reveal";
 
 // Image slots match the LIVE site (old allinonehomeinspections repo) exactly.
 const HERO_BG = "/images/hero-bg.webp"; // live hero background
-const TECH_IMG = "/images/hero-inspector.webp"; // live AIO technician cutout (NOT a Super person)
+// 2026-11-11: the Super Inspector hero technician (SI new-backgroundless-image-2) with ONLY the
+// chest logo swapped to All In One; replaces the previous AIO technician cutout. Canvas
+// 1271×1920, transparent pad L378/T127/R130/B0 — identical to the SI file, so the desktop
+// container's 47px right-pad anchor below (measured for that file) and the mobile
+// aspect-[6/7] object-[60%_top] crop sit him exactly as on the SI hero.
+const TECH_IMG = "/images/hero-inspector-aio.webp";
 
 export function Hero() {
   return (

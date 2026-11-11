@@ -50,7 +50,6 @@ const INSPECTORS: Member[] = [
   { name: "Erik Hedin", role: "Home Inspector", license: "Pest 27920-57764 and PTI 01359", photo: "/images/team/erik.webp" },
   { name: "Jeremy St. Pierre", role: "Environmental Technician", license: "MREC License #34427", photo: "/images/team/jeremy.webp" },
   { name: "Steven Flynn", role: "Inspector", license: "MREC License #31178", photo: "/images/team/steven.webp" },
-  { name: "Dan Deboodt", role: "Home Inspector", license: "MREC #35878", email: "dan@allinonehomeinspections.com", phone: "(405) 414-6712", photo: "/images/team/dan.webp" },
   { name: "Justin Barrick", role: "Home Inspector", license: "MREC #36275", email: "jbarrick@allinonehomeinspections.com", phone: "(717) 679-1275", photo: "/images/team/justin.webp" },
   { name: "Alex Rhynes", role: "Environmental Technician", email: "arhynes@allinonehomeinspections.com", phone: "(301) 633-5999", photo: "/images/team/alex.webp" },
 ];
@@ -91,7 +90,12 @@ function MemberCard({ m }: { m: Member }) {
   );
 }
 
-function Group({ heading, members }: { heading: string; members: Member[] }) {
+/**
+ * `centerLastRow`: flex-wrap instead of grid so an incomplete final row sits centered rather
+ * than orphaned at the left (ruler rule). Card widths reproduce the grid's 1 / 2 / 4 columns
+ * and gaps exactly. Used for Certified Inspectors (5 cards since 2026-11-11).
+ */
+function Group({ heading, members, centerLastRow = false }: { heading: string; members: Member[]; centerLastRow?: boolean }) {
   return (
     <div className="mx-[calc(-1*var(--section-margin-x))]">
       <div className="content-rail">
@@ -100,13 +104,27 @@ function Group({ heading, members }: { heading: string; members: Member[] }) {
             {heading}
           </h2>
         </Reveal>
-        <div className="mt-8 grid grid-cols-1 gap-[15px] sm:grid-cols-2 md:gap-[10px] lg:mt-10 lg:grid-cols-4 lg:gap-[15px]">
-          {members.map((mem, i) => (
-            <Reveal key={mem.name} delay={Math.min(i * 0.08, 0.3)}>
-              <MemberCard m={mem} />
-            </Reveal>
-          ))}
-        </div>
+        {centerLastRow ? (
+          <div className="mt-8 flex flex-wrap justify-center gap-[15px] md:gap-[10px] lg:mt-10 lg:gap-[15px]">
+            {members.map((mem, i) => (
+              <Reveal
+                key={mem.name}
+                delay={Math.min(i * 0.08, 0.3)}
+                className="w-full sm:w-[calc((100%-15px)/2)] md:w-[calc((100%-10px)/2)] lg:w-[calc((100%-45px)/4)]"
+              >
+                <MemberCard m={mem} />
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 grid grid-cols-1 gap-[15px] sm:grid-cols-2 md:gap-[10px] lg:mt-10 lg:grid-cols-4 lg:gap-[15px]">
+            {members.map((mem, i) => (
+              <Reveal key={mem.name} delay={Math.min(i * 0.08, 0.3)}>
+                <MemberCard m={mem} />
+              </Reveal>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -128,7 +146,7 @@ export default function TeamPage() {
       </Section>
 
       <Section variant="light" ariaLabel="Certified Inspectors" className="pb-[50px] lg:pb-[75px]">
-        <Group heading="Certified Inspectors" members={INSPECTORS} />
+        <Group heading="Certified Inspectors" members={INSPECTORS} centerLastRow />
       </Section>
     </>
   );
