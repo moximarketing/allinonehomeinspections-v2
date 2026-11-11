@@ -418,3 +418,24 @@ Client (Josh Musser, Super Home Services): Dan Deboodt was let go. Branch `remov
 
 **Also (standing rule)**: `globals.css` gained the Tailwind v4 `@source not` doc exclusions.
 Generated-class diff: only `invert` and `isolate` dropped, both doc-only (playbook / this report).
+
+**Verified on preview** `allinonehomeinspections-3d6w44s0l` (commit `773d5a0`), headless Chromium at
+exact 1440×900 / 1280×800 / 390×844 (mobile, DPR 2). Artifacts: `~/moxi-inbox/aio-hero/verify/`.
+- Home + team: HTTP 200, zero console errors, zero ≥400 responses, zero broken images, no
+  horizontal scroll, at all three widths.
+- Hero: painted body rect overlaps none of the hero h1/p/links (computed from the object-contain /
+  object-cover geometry); head 245–255px below hero top on desktop; no halo on the house photo.
+  Mobile: waist-up crop under the trust row, sits on the quote card.
+- Team: Certified Inspectors = 5 cards; 5th card centered on the rail at 1440/1280 (563+314/2 =
+  720 = rail center at 1440); single column at 390.
+- All 17 sitemap URLs: 200 and rendered HTML free of "Deboodt" / "dan@allinone" / "dan.webp" /
+  "35878" / the word "Dan". `/images/team/dan.webp` and `/images/hero-inspector.webp` → 404.
+
+**Flags**
+- Chest logo renders ~35 CSS px wide on desktop / ~16px on mobile (same scale the S logo had):
+  reads as the AIO mark (white swoosh + red roof + white "IN"), but the brand-red #75140C "ALL" /
+  "ONE" are low-contrast on navy at that size. Option: brighten the red inside the logo box only.
+- Hero `alt` left empty: both technician slots are decorative + `aria-hidden` (SI does the same).
+- Pre-existing, not touched: cookie banner at 390 sits under the a11y FAB (Decline button is
+  partly covered); 390 trust row wraps to narrow 3-line columns; Leadership (6) still leaves a
+  2-card second row left-aligned at 1440/1280.
