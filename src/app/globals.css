@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source not "../../**/*.md";
+@source not "../../public/*.txt";
 
 /*
  * All In One Home Inspections — design tokens extracted byte-exact from the live

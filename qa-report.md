@@ -391,3 +391,30 @@ apex + www aliases confirmed on the new deployment via the Vercel API)
 **Flags**
 - Archival live-WordPress snapshots (`spec/all-pages-elementor-data.json`,
   `spec/extracted/*`) still show $100; they are not rendered. Left as-is.
+
+## 2026-11-11 — Remove Dan Deboodt; hero technician → SI technician with AIO chest logo
+
+Client (Josh Musser, Super Home Services): Dan Deboodt was let go. Branch `remove-dan-hero-swap`.
+
+**Dan removed**
+- `inspectors-mission-super-team-the-team/page.tsx`: his INSPECTORS card (name, MREC #35878,
+  dan@ email, (405) 414-6712) and `public/images/team/dan.webp`.
+- He had no bio route, no Person schema, no sitemap entry and no other text reference, so no 301.
+- Certified Inspectors is now 5 cards → the group renders with `centerLastRow` (flex-wrap, widths
+  reproduce the 1/2/4-col grid + gaps) so the lone 5th card centers instead of orphaning left.
+- Hero cutout `public/images/hero-inspector.webp` was Dan → deleted, and the unrendered
+  Elementor-era copy `public/images/source/new-backgroundless-image-6.png` (also Dan) deleted.
+
+**Hero technician**
+- New `public/images/hero-inspector-aio.webp` = SI `new-backgroundless-image-2.webp` with ONLY the
+  chest logo changed (S + ® → All In One, red roof / white swoosh + "IN" / red "ALL" "ONE").
+  Made by ChatGPT editing the original pixels (attempt 2; attempt 1 regenerated the man and was
+  rejected). Verified: only a 100×76px chest box differs from the SI original; alpha identical.
+- Alpha cleanup: body alpha 248–254 (lossy-WebP artifact in the SI source) snapped to 255; 318
+  near-white edge pixels at mean alpha ~8 zeroed. Corners/edges alpha 0; checked over dark + white.
+- Canvas 1271×1920, pad L378/T127/R130/B0 = SI file, so the hero's existing 47px right-pad anchor
+  (measured for that file) and the mobile crop need no change. No hero sizing values changed.
+- Alt stays `alt=""` — both hero slots are decorative and `aria-hidden` (same as SI).
+
+**Also (standing rule)**: `globals.css` gained the Tailwind v4 `@source not` doc exclusions.
+Generated-class diff: only `invert` and `isolate` dropped, both doc-only (playbook / this report).
