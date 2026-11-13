@@ -25,6 +25,7 @@ const QUICK_LINKS = [
   { label: "FAQ", href: "/#faq" },
   { label: "Schedule Inspection", href: "/#schedule" },
   { label: "Contact Us", href: "/contact-us/" },
+  { label: "Home Utilities Setup", href: "/utilities/" }, // Joel 2026-11-13: /utilities had no inbound links
 ];
 
 const CONTACTS = [
