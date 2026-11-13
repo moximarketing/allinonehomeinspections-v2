@@ -439,3 +439,9 @@ exact 1440×900 / 1280×800 / 390×844 (mobile, DPR 2). Artifacts: `~/moxi-inbox
 - Pre-existing, not touched: cookie banner at 390 sits under the a11y FAB (Decline button is
   partly covered); 390 trust row wraps to narrow 3-line columns; Leadership (6) still leaves a
   2-card second row left-aligned at 1440/1280.
+
+## 2026-11-13: "Home Utilities Setup" footer link (branch `footer-utilities-link`)
+
+- /utilities had no inbound links from the nav or footer. Joel asked for the same link change as Super Inspector (nav dropdown + mobile menu + footer services list), but AIO has a flat nav with no dropdowns and no footer services list. **Joel's decision: footer Quick Links only.** The header and mobile menu are untouched.
+- `src/components/layout/footer.tsx`: QUICK_LINKS gets "Home Utilities Setup" → /utilities/ at the end. Nothing else changed.
+- The /utilities page has no energy-audit content (checked live 2026-11-13), so no content change.
