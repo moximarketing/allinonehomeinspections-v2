@@ -35,7 +35,6 @@ type Member = { name: string; role?: string; bio?: string; license?: string; ema
 const LEADERSHIP: Member[] = [
   { name: "Blake Williams", role: "Owner / Founder", photo: "/images/team/blake.webp", bio: "Our trailblazer and visionary, with a cowboy’s spirit of adventure. (He’s got the hat and boots to match). He inspires our “Yes” mindset, and continually empowers our team to deliver excellent service to everyone we serve." },
   { name: "Angela Williams", role: "Owner / Founder", photo: "/images/team/angela.webp", bio: "Our company’s voice of reason and Boss Lady extraordinaire! Her background in education and sales has given her a passion for customer care. She is dedicated to giving every client who calls the service they expect—and more!" },
-  { name: "Kevin Ray", role: "CFO", photo: "/images/team/kevin.webp", bio: "Kevin Ray is a humble leader with a background in organizational design, team accountability, and relationship-building across all levels. A Marine Corps veteran, he applies discipline and integrity to everything he does. Outside of work, he enjoys time with his wife and three kids, including one studying at the University of Arkansas." },
   { name: "Robert Dillin", role: "CEO", photo: "/images/team/robert.webp", bio: "From growing up baling hay in the country to working on oil rigs around the US, Robert leads our whole inspecting team and takes care of any problems that arise. His passion is to increase the level of service and expertise our inspectors provide. When he’s not at work, you’ll find him out hunting or fishing and just enjoying the simple things in life." },
   { name: "Leah Ann Dillin", role: "Vice President of Operations", photo: "/images/team/leah-ann.webp", bio: "Directing operations requires a sharp mind and quick processing, and Leah Ann’s tenacity keeps our ship afloat. She has a background in a variety of companies and her thoroughness and relentless work ethic is one of our team’s greatest powers!" },
   { name: "Delta Napolitano", role: "Marketing and Education Director", photo: "/images/team/delta.webp", bio: "As a young mom and first time homeowner herself, Delta knows firsthand the journey that new homebuyers are on. She is an excellent leader and supports our clients each step of the way through initial inspection through to our concierge services." },
@@ -93,7 +92,7 @@ function MemberCard({ m }: { m: Member }) {
 /**
  * `centerLastRow`: flex-wrap instead of grid so an incomplete final row sits centered rather
  * than orphaned at the left (ruler rule). Card widths reproduce the grid's 1 / 2 / 4 columns
- * and gaps exactly. Used for Certified Inspectors (5 cards since 2026-11-11).
+ * and gaps exactly. Used for Certified Inspectors (5 cards since 2026-11-11) and Leadership (5 cards since 2026-11-17).
  */
 function Group({ heading, members, centerLastRow = false }: { heading: string; members: Member[]; centerLastRow?: boolean }) {
   return (
@@ -138,7 +137,7 @@ export default function TeamPage() {
       <PageHero title="Meet The Team" breadcrumbs={[{ label: "Home", href: "/" }, { label: "Our Team" }]} />
 
       <Section variant="light" ariaLabel="Leadership" className="py-[50px] lg:py-[75px]">
-        <Group heading="Leadership" members={LEADERSHIP} />
+        <Group heading="Leadership" members={LEADERSHIP} centerLastRow />
       </Section>
 
       <Section variant="light" ariaLabel="Support Staff" className="pb-[50px] lg:pb-[75px]">

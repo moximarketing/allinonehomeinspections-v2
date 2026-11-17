@@ -2,8 +2,7 @@
 //
 // 🚩🚩 FLAG — DO NOT SHIP AS-IS. The live AIO team page (Elementor page 11668,
 // "inspectors-mission-super-team-the-team") is an UNVERIFIED TEXAS CLONE. The extracted data
-// literally contains Super Inspector (Texas) people and titles — e.g. "Kevin Ray — CFO of
-// Super Inspector", "Robert Dillin — CEO of Super Inspector", Blake/Angela Williams' cowboy
+// literally contains Super Inspector (Texas) people and titles — e.g. "Robert Dillin — CEO of Super Inspector", Blake/Angela Williams' cowboy
 // bios. These are clone artifacts, NOT confirmed All In One staff. The MREC license numbers
 // and the inspectors below are also unverified for AIO.
 //
@@ -21,7 +20,6 @@ export const teamGroups = [
       { name: "Blake Williams", role: "Owner / Founder", license: "", image: "blake-2.webp" },
       { name: "Angela Williams", role: "Owner / Founder", license: "", image: "Angela-2.webp" },
       // FLAG: Texas titles below ("...of Super Inspector") — almost certainly clone artifacts.
-      { name: "Kevin Ray", role: "CFO of Super Inspector", license: "", image: "Superteam-Headshots-August-2024-9961-scaled-e1740170375902-1536x1536-1.jpg" },
       { name: "Robert Dillin", role: "CEO of Super Inspector", license: "", image: "Robert-2.webp" },
       { name: "Leah Ann Dillin", role: "Vice President of Operations", license: "", image: "Leah-Ann-2.webp" },
       { name: "Delta Napolitano", role: "Marketing and Education Director", license: "", image: "delta-2.webp" },
