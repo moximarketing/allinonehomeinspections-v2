@@ -1,0 +1,3 @@
+# Never upload env files on a CLI deploy (Vercel only skips .env.local / .env.*.local by default)
+.env*
+!.env.example
